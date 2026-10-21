@@ -1,0 +1,5399 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F8FAFC">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="ALIF AMZAR — a calm, considered home for classroom tools, rewards, and Qur'an resources.">
+  <title>ALIF AMZAR — Personal LinkHub</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    // Set the theme before first paint to avoid a flash of the wrong mode.
+    (function () {
+      try {
+        var saved = localStorage.getItem('linkhub-theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (error) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* ------------------------------------------------------------------
+       1. Design tokens
+    ------------------------------------------------------------------ */
+    :root {
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --surface-soft: #F1F5F9;
+      --surface-translucent: rgba(255, 255, 255, 0.72);
+      --ink: #0F172A;
+      --muted: #5A6B7E;
+      --faint: #6E7E94;
+      --line: #E6EBF3;
+      --line-strong: #D5DEEA;
+      --accent: #4F46E5;
+      --accent-2: #8B5CF6;
+      --accent-soft: #EEF2FF;
+      --header-bg: rgba(248, 250, 252, 0.82);
+      --ring: rgba(79, 70, 229, 0.30);
+
+      --cat-classroom: #4338CA;
+      --cat-classroom-soft: #EEF2FF;
+      --cat-rewards: #B45309;
+      --cat-rewards-soft: #FFFBEB;
+      --cat-quranverse: #0F766E;
+      --cat-quranverse-soft: #F0FDFA;
+      --cat-resources: #BE123C;
+      --cat-resources-soft: #FFF1F2;
+
+      --danger: #E11D48;
+      --danger-soft: #FFF1F2;
+
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.03);
+      --shadow-md: 0 2px 4px rgba(15, 23, 42, 0.03), 0 14px 34px -20px rgba(15, 23, 42, 0.24);
+      --shadow-lg: 0 28px 64px -32px rgba(15, 23, 42, 0.30);
+
+      --radius-lg: 20px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --container: 1320px;
+      --ease: cubic-bezier(0.22, 0.7, 0.3, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0B1220;
+      --surface: #172033;
+      --surface-soft: #131C2C;
+      --surface-translucent: rgba(23, 32, 51, 0.72);
+      --ink: #F8FAFC;
+      --muted: #94A3B8;
+      --faint: #9AA9BC;
+      --line: rgba(148, 163, 184, 0.16);
+      --line-strong: rgba(148, 163, 184, 0.28);
+      --accent: #818CF8;
+      --accent-2: #C4B5FD;
+      --accent-soft: rgba(129, 140, 248, 0.12);
+      --header-bg: rgba(11, 18, 32, 0.80);
+      --ring: rgba(129, 140, 248, 0.34);
+
+      --cat-classroom: #A5B4FC;
+      --cat-classroom-soft: #283152;
+      --cat-rewards: #FBBF24;
+      --cat-rewards-soft: #3A3527;
+      --cat-quranverse: #5EEAD4;
+      --cat-quranverse-soft: #1A3A40;
+      --cat-resources: #FDA4AF;
+      --cat-resources-soft: #3B2B34;
+
+      --danger: #FB7185;
+      --danger-soft: rgba(251, 113, 133, 0.12);
+
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.20);
+      --shadow-md: 0 18px 40px -24px rgba(0, 0, 0, 0.70);
+      --shadow-lg: 0 30px 70px -30px rgba(0, 0, 0, 0.80);
+    }
+
+    /* ------------------------------------------------------------------
+       2. Base
+    ------------------------------------------------------------------ */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(920px 480px at 82% -12%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 64%),
+        radial-gradient(720px 420px at 2% -4%, rgba(13, 148, 136, 0.07), transparent 58%);
+      background-repeat: no-repeat;
+      overflow-x: clip;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::selection { background: var(--accent); color: #FFF; }
+    ::selection { background: var(--accent); color: #FFF; }
+
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    svg { display: block; }
+    [hidden] { display: none !important; }
+
+    h1, h2, h3, p { margin: 0; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -70px;
+      left: 16px;
+      z-index: 200;
+      padding: 10px 15px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #FFF;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: top 0.2s var(--ease);
+    }
+    .skip-link:focus { top: 14px; }
+
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 40px);
+    }
+
+    .category-classroom    { --cat: var(--cat-classroom);    --cat-soft: var(--cat-classroom-soft); }
+    .category-rewards      { --cat: var(--cat-rewards);      --cat-soft: var(--cat-rewards-soft); }
+    .category-quranverse   { --cat: var(--cat-quranverse);   --cat-soft: var(--cat-quranverse-soft); }
+    .category-resources    { --cat: var(--cat-resources);    --cat-soft: var(--cat-resources-soft); }
+    .category-default      { --cat: var(--accent);           --cat-soft: var(--accent-soft); }
+
+    /* ------------------------------------------------------------------
+       3. Header
+    ------------------------------------------------------------------ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--header-bg);
+      border-bottom: 1px solid transparent;
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      backdrop-filter: blur(20px) saturate(160%);
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+    .site-header.is-stuck {
+      border-bottom-color: var(--line);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 14px clamp(16px, 4vw, 40px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      color: inherit;
+      text-decoration: none;
+      border-radius: 12px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: linear-gradient(145deg, #6366F1 0%, #4F46E5 52%, #4338CA 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.28),
+        0 8px 18px -10px rgba(79, 70, 229, 0.75);
+      color: #FFF;
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .brand-text { display: flex; flex-direction: column; min-width: 0; }
+
+    .brand-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: 0.17em;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .brand-sub {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: none;
+    }
+
+    .clock {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      min-width: 88px;
+      padding: 6px 12px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.15;
+    }
+
+    .clock-date {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .clock-time {
+      margin-top: 2px;
+      font-size: 12.5px;
+      font-weight: 650;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s var(--ease);
+    }
+    .icon-btn:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+
+    .theme-toggle { position: relative; overflow: hidden; }
+    .icon-slot {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      transition: opacity 0.3s ease, transform 0.45s var(--ease);
+    }
+    .icon-slot svg { width: 18px; height: 18px; }
+    /* Show the theme you can switch to: moon in light mode, sun in dark mode. */
+    .icon-slot.sun { opacity: 0; transform: rotate(90deg) scale(0.6); }
+    .icon-slot.moon { opacity: 1; transform: rotate(0) scale(1); }
+    [data-theme="dark"] .icon-slot.sun { opacity: 1; transform: rotate(0) scale(1); }
+    [data-theme="dark"] .icon-slot.moon { opacity: 0; transform: rotate(-90deg) scale(0.6); }
+
+    .admin-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      height: 40px;
+      padding: 0 14px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      background: var(--ink);
+      color: var(--bg);
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease), box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    .admin-btn svg { width: 15px; height: 15px; }
+    .admin-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px -14px color-mix(in srgb, var(--ink) 70%, transparent);
+    }
+    .admin-btn:active { transform: translateY(0); }
+
+    /* ------------------------------------------------------------------
+       4. Hero
+    ------------------------------------------------------------------ */
+    main { padding: clamp(32px, 5vw, 58px) 0 44px; }
+
+    .hero { padding-bottom: clamp(34px, 5vw, 52px); }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.19em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    .hero h1 {
+      max-width: 18ch;
+      margin: 18px 0 14px;
+      font-size: clamp(34px, 4.4vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.045em;
+      line-height: 1.05;
+      text-wrap: balance;
+    }
+
+    .hero h1 .accent {
+      background: linear-gradient(100deg, var(--accent) 0%, var(--accent-2) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-lead {
+      max-width: 545px;
+      color: var(--muted);
+      font-size: 14.5px;
+      line-height: 1.7;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 11px;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+    .hero-meta strong { color: var(--ink); font-weight: 650; font-variant-numeric: tabular-nums; }
+
+    .meta-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--line-strong);
+    }
+
+    .hero-mobile-date {
+      display: none;
+      align-items: center;
+      gap: 7px;
+      margin-top: 18px;
+      color: var(--faint);
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .hero-mobile-date svg { width: 13px; height: 13px; }
+
+    /* ------------------------------------------------------------------
+       5. Sections
+    ------------------------------------------------------------------ */
+    .section { scroll-margin-top: 96px; }
+    .section:focus { outline: none; }
+    .section + .section { margin-top: clamp(38px, 5vw, 54px); }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--ink);
+      font-size: 19px;
+      font-weight: 650;
+      letter-spacing: -0.025em;
+      line-height: 1.3;
+    }
+
+    .count-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 21px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .section-sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 550;
+      text-decoration: none;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .text-link svg { width: 14px; height: 14px; transition: transform 0.2s var(--ease); }
+    .text-link:hover { color: var(--ink); background: var(--surface); }
+    .text-link:hover svg { transform: translateX(2px); }
+
+    /* ------------------------------------------------------------------
+       6. Quick access
+    ------------------------------------------------------------------ */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .quick-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 194px;
+      padding: 20px;
+      overflow: hidden;
+      isolation: isolate;
+      border: 1px solid color-mix(in srgb, var(--cat) 14%, transparent);
+      border-radius: var(--radius-lg);
+      background: var(--cat-soft);
+      color: var(--ink);
+      text-decoration: none;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+      transition: transform 0.3s var(--ease), box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .quick-card::before {
+      content: "";
+      position: absolute;
+      top: -72px;
+      right: -58px;
+      z-index: -1;
+      width: 176px;
+      height: 176px;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--cat) 12%, transparent);
+      transition: transform 0.55s var(--ease);
+    }
+
+    .quick-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .quick-icon {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 44px;
+      height: 44px;
+      border: 1px solid color-mix(in srgb, var(--cat) 15%, transparent);
+      border-radius: 13px;
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      color: var(--cat);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      transition: transform 0.3s var(--ease);
+    }
+    .quick-icon svg { width: 20px; height: 20px; }
+
+    .quick-arrow {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 30px;
+      height: 30px;
+      border: 1px solid color-mix(in srgb, var(--cat) 13%, transparent);
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--surface) 55%, transparent);
+      color: var(--cat);
+      transition: transform 0.25s var(--ease), background 0.25s ease;
+    }
+    .quick-arrow svg { width: 14px; height: 14px; }
+
+    .quick-content { display: flex; flex-direction: column; margin-top: auto; }
+
+    .quick-cat {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 6px;
+      color: var(--cat);
+      font-size: 9px;
+      font-weight: 650;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .quick-lock { display: inline-flex; color: var(--cat); opacity: 0.8; }
+    .quick-lock svg { width: 10px; height: 10px; }
+
+    .quick-name {
+      display: -webkit-box;
+      overflow: hidden;
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .quick-desc {
+      display: -webkit-box;
+      overflow: hidden;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 11.8px;
+      line-height: 1.55;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    @media (hover: hover) {
+      .quick-card:hover {
+        transform: translateY(-4px);
+        border-color: color-mix(in srgb, var(--cat) 30%, transparent);
+        box-shadow: 0 24px 44px -26px color-mix(in srgb, var(--cat) 55%, rgba(15, 23, 42, 0.2));
+      }
+      .quick-card:hover::before { transform: scale(1.14); }
+      .quick-card:hover .quick-icon { transform: scale(1.05) rotate(-3deg); }
+      .quick-card:hover .quick-arrow { transform: translate(2px, -2px); background: var(--surface); }
+    }
+
+    /* ------------------------------------------------------------------
+       7. Library toolbar
+    ------------------------------------------------------------------ */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .search {
+      position: relative;
+      flex: 1 1 280px;
+      max-width: 410px;
+    }
+
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      width: 17px;
+      height: 17px;
+      color: var(--faint);
+      transform: translateY(-50%);
+      pointer-events: none;
+      transition: color 0.2s ease;
+    }
+
+    .search input {
+      width: 100%;
+      height: 46px;
+      padding: 0 84px 0 42px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 450;
+      outline: none;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .search input::placeholder { color: var(--faint); }
+    .search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+    .search:focus-within input {
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+    .search:focus-within .search-icon { color: var(--accent); }
+
+    .search kbd {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      display: grid;
+      place-items: center;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-bottom-width: 2px;
+      border-radius: 6px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 10.5px;
+      font-weight: 500;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .search-clear {
+      position: absolute;
+      top: 50%;
+      right: 9px;
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transform: translateY(-50%);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .search-clear svg { width: 14px; height: 14px; }
+    .search-clear:hover { background: var(--surface-soft); color: var(--ink); }
+    .search.has-value kbd { display: none; }
+    .search:not(.has-value) .search-clear { display: none; }
+
+    .filters {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 38px;
+      padding: 0 12px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+    .chip:hover {
+      border-color: var(--line);
+      background: var(--surface);
+      color: var(--ink);
+    }
+    .chip[aria-pressed="true"] {
+      border-color: transparent;
+      background: var(--ink);
+      color: var(--bg);
+      box-shadow: 0 8px 18px -14px color-mix(in srgb, var(--ink) 70%, transparent);
+    }
+
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cat);
+      flex: none;
+    }
+    .chip[aria-pressed="true"] .chip-dot { box-shadow: 0 0 0 2px color-mix(in srgb, var(--bg) 28%, transparent); }
+
+    .chip-count {
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 550;
+      font-variant-numeric: tabular-nums;
+    }
+    .chip[aria-pressed="true"] .chip-count { color: color-mix(in srgb, var(--bg) 65%, transparent); }
+
+    .chip svg { width: 13px; height: 13px; }
+
+    .results-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 24px;
+      margin-bottom: 12px;
+      color: var(--faint);
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .reset-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 7px;
+      margin-right: -7px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 550;
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .reset-link svg { width: 11px; height: 11px; }
+    .reset-link:hover { color: var(--ink); background: var(--surface); }
+
+    /* ------------------------------------------------------------------
+       8. Application cards
+    ------------------------------------------------------------------ */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .app-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 186px;
+      padding: 18px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--surface);
+      color: inherit;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.28s var(--ease), box-shadow 0.28s ease, border-color 0.28s ease;
+    }
+
+    .app-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cat), transparent 72%);
+      opacity: 0;
+      transition: opacity 0.28s ease;
+    }
+
+    .app-card.is-archived { background: var(--surface-soft); }
+
+    .app-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .app-icon {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 42px;
+      height: 42px;
+      border: 1px solid color-mix(in srgb, var(--cat) 11%, transparent);
+      border-radius: 12px;
+      background: var(--cat-soft);
+      color: var(--cat);
+      transition: transform 0.28s var(--ease);
+    }
+    .app-icon svg { width: 19px; height: 19px; }
+    .app-card.is-archived .app-icon { opacity: 0.72; }
+
+    .app-flags { display: flex; align-items: center; gap: 4px; }
+
+    .app-flag {
+      display: grid;
+      place-items: center;
+      width: 23px;
+      height: 23px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface-soft);
+      color: var(--muted);
+    }
+    .app-flag svg { width: 11px; height: 11px; }
+    .app-flag.is-star { border-color: color-mix(in srgb, #D97706 22%, transparent); background: color-mix(in srgb, #D97706 9%, var(--surface)); color: #D97706; }
+    .app-flag.is-star svg { fill: currentColor; fill-opacity: 0.14; }
+    .app-flag.is-lock { color: var(--muted); }
+
+    .app-name {
+      display: -webkit-box;
+      overflow: hidden;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.38;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .app-desc {
+      display: -webkit-box;
+      overflow: hidden;
+      margin-bottom: 15px;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.55;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .app-footer {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: auto;
+      padding-top: 11px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .app-cat {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    .cat-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--cat);
+      flex: none;
+    }
+
+    .app-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #22C55E;
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.13);
+      flex: none;
+    }
+    .app-status.is-archived .status-dot { background: #F59E0B; box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.14); }
+
+    .app-open {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      color: var(--muted);
+      transition: color 0.2s ease, background 0.2s ease, transform 0.2s var(--ease);
+    }
+    .app-open svg { width: 12px; height: 12px; }
+
+    @media (hover: hover) {
+      .app-card:hover {
+        transform: translateY(-3px);
+        border-color: color-mix(in srgb, var(--cat) 30%, var(--line));
+        box-shadow: 0 20px 38px -26px color-mix(in srgb, var(--cat) 50%, rgba(15, 23, 42, 0.3));
+      }
+      .app-card:hover::before { opacity: 1; }
+      .app-card:hover .app-icon { transform: scale(1.05) rotate(-2deg); }
+      .app-card:hover .app-open { color: var(--cat); background: var(--cat-soft); transform: translate(1px, -1px); }
+    }
+
+    .app-card:focus-visible { outline-offset: 4px; }
+
+    /* ------------------------------------------------------------------
+       9. Empty and loading states
+    ------------------------------------------------------------------ */
+    .empty {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 56px 24px;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius-lg);
+      background: color-mix(in srgb, var(--surface) 62%, transparent);
+      text-align: center;
+    }
+    .empty.is-visible { display: flex; }
+
+    .empty-icon {
+      display: grid;
+      place-items: center;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 15px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .empty-icon svg { width: 22px; height: 22px; }
+
+    .empty h3 {
+      margin-bottom: 6px;
+      font-size: 15.5px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+
+    .empty p {
+      max-width: 330px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .empty-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      margin-top: 18px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 11.5px;
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.2s var(--ease);
+    }
+    .empty-btn:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+    .empty-btn svg { width: 13px; height: 13px; }
+
+    .sk {
+      background-color: var(--surface-soft);
+      background-image: linear-gradient(
+        100deg,
+        transparent 20%,
+        color-mix(in srgb, var(--surface) 82%, transparent) 40%,
+        transparent 60%
+      );
+      background-size: 220% 100%;
+      background-repeat: no-repeat;
+      animation: shimmer 1.6s linear infinite;
+    }
+
+    .sk-quick {
+      display: flex;
+      flex-direction: column;
+      min-height: 194px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+    .sk-icon { width: 44px; height: 44px; border-radius: 13px; }
+    .sk-quick-body { margin-top: auto; }
+    .sk-line { height: 8px; border-radius: 5px; }
+    .sk-line + .sk-line { margin-top: 9px; }
+    .sk-w-40 { width: 40%; }
+    .sk-w-55 { width: 55%; }
+    .sk-w-65 { width: 65%; }
+    .sk-w-75 { width: 75%; }
+    .sk-w-85 { width: 85%; }
+    .sk-w-95 { width: 95%; }
+
+    .sk-card {
+      min-height: 186px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+    .sk-card .sk-top { display: flex; justify-content: space-between; margin-bottom: 16px; }
+    .sk-card .sk-icon { width: 42px; height: 42px; border-radius: 12px; }
+    .sk-card .sk-flag { width: 23px; height: 23px; border-radius: 7px; }
+    .sk-card .sk-name { height: 11px; width: 78%; border-radius: 5px; }
+    .sk-card .sk-desc { height: 8px; width: 92%; border-radius: 5px; margin-top: 13px; }
+    .sk-card .sk-desc-2 { height: 8px; width: 60%; border-radius: 5px; margin-top: 7px; }
+    .sk-card .sk-foot { height: 8px; width: 52%; border-radius: 5px; margin-top: auto; }
+    .sk-card { display: flex; flex-direction: column; }
+
+    @keyframes shimmer {
+      0% { background-position: 130% 0; }
+      100% { background-position: -130% 0; }
+    }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate { animation: riseIn 0.5s var(--ease) both; animation-delay: calc(var(--i, 0) * 38ms); }
+
+    /* ------------------------------------------------------------------
+       10. Footer and toast
+    ------------------------------------------------------------------ */
+    .site-footer {
+      margin-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 22px clamp(16px, 4vw, 40px);
+      color: var(--muted);
+      font-size: 10.5px;
+      line-height: 1.5;
+    }
+
+    .footer-brand {
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+    }
+    .footer-sep { margin: 0 7px; opacity: 0.5; }
+
+    .toast {
+      position: fixed;
+      bottom: calc(24px + env(safe-area-inset-bottom));
+      left: 50%;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      max-width: calc(100vw - 32px);
+      padding: 11px 15px;
+      border-radius: 11px;
+      background: var(--ink);
+      color: var(--bg);
+      box-shadow: var(--shadow-lg);
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1.4;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 14px);
+      transition: opacity 0.25s ease, transform 0.3s var(--ease);
+    }
+    .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+    .toast svg { width: 15px; height: 15px; flex: none; }
+
+    .offline {
+      position: fixed;
+      top: calc(72px + env(safe-area-inset-top));
+      left: 50%;
+      z-index: 95;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: calc(100vw - 32px);
+      padding: 9px 13px;
+      border: 1px solid color-mix(in srgb, #F59E0B 32%, transparent);
+      border-radius: 10px;
+      background: color-mix(in srgb, #FFFBEB 88%, var(--surface));
+      color: #78350F;
+      box-shadow: var(--shadow-md);
+      font-size: 11px;
+      font-weight: 550;
+      transform: translateX(-50%);
+    }
+    .offline svg { width: 13px; height: 13px; flex: none; }
+    [data-theme="dark"] .offline {
+      background: #2A2214;
+      color: #FCD34D;
+    }
+
+    .noscript {
+      margin: 16px;
+      padding: 14px 16px;
+      border: 1px solid #FCD34D;
+      border-radius: 12px;
+      background: #FFFBEB;
+      color: #78350F;
+      font-size: 12px;
+    }
+
+    /* ------------------------------------------------------------------
+       11. Admin dialog
+    ------------------------------------------------------------------ */
+    body.is-locked { overflow: hidden; }
+
+    .modal-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+      background: rgba(15, 23, 42, 0.46);
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);
+      opacity: 0;
+      transition: opacity 0.22s ease;
+    }
+    .modal-layer.is-visible { opacity: 1; }
+
+    [data-theme="dark"] .modal-layer { background: rgba(3, 7, 18, 0.64); }
+
+    .admin-panel {
+      display: flex;
+      flex-direction: column;
+      width: min(740px, 100%);
+      max-height: min(86vh, 820px);
+      max-height: min(86dvh, 820px);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(16px) scale(0.985);
+      transition: transform 0.28s var(--ease);
+    }
+    .modal-layer.is-visible .admin-panel { transform: translateY(0) scale(1); }
+    .admin-panel:focus { outline: none; }
+
+    .admin-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex: none;
+      padding: 20px 22px 17px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .admin-eyebrow {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--accent);
+      font-size: 9.5px;
+      font-weight: 650;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+    }
+
+    .admin-title {
+      font-size: 18px;
+      font-weight: 650;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+
+    .admin-close { width: 36px; height: 36px; border-radius: 10px; box-shadow: none; }
+    .admin-close svg { width: 17px; height: 17px; }
+
+    .admin-head-text { min-width: 0; }
+    .admin-head-actions { display: flex; align-items: center; gap: 6px; flex: none; }
+    .admin-signout { width: 36px; height: 36px; border-radius: 10px; box-shadow: none; }
+    .admin-signout svg { width: 15px; height: 15px; }
+
+    .admin-title-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+    .admin-mode {
+      display: inline-flex;
+      align-items: center;
+      flex: none;
+      height: 18px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .admin-mode.is-demo {
+      border-color: color-mix(in srgb, var(--cat-rewards) 20%, transparent);
+      background: color-mix(in srgb, var(--cat-rewards) 8%, var(--surface));
+      color: var(--cat-rewards);
+    }
+    .admin-mode.is-live {
+      border-color: color-mix(in srgb, var(--cat-quranverse) 22%, transparent);
+      background: color-mix(in srgb, var(--cat-quranverse) 8%, var(--surface));
+      color: var(--cat-quranverse);
+    }
+
+    .admin-bar-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    .admin-reorder {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 38px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+    .admin-reorder svg { width: 14px; height: 14px; }
+    .admin-reorder:hover { border-color: var(--line-strong); }
+    .admin-reorder[aria-pressed="true"] {
+      border-color: transparent;
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .admin-reorder-hint {
+      margin: -4px 0 12px;
+      color: var(--muted);
+      font-size: 10.5px;
+      line-height: 1.5;
+    }
+
+    .icon-action:disabled {
+      background: transparent;
+      color: var(--faint);
+      cursor: not-allowed;
+      opacity: 0.35;
+    }
+
+    .admin-login {
+      max-width: 360px;
+      margin: 6px auto 4px;
+      text-align: center;
+    }
+    .admin-login-icon {
+      display: grid;
+      place-items: center;
+      width: 50px;
+      height: 50px;
+      margin: 4px auto 14px;
+      border-radius: 15px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .admin-login-icon svg { width: 22px; height: 22px; }
+    .admin-login-title {
+      margin-top: 2px;
+      font-size: 19px;
+      font-weight: 650;
+      letter-spacing: -0.025em;
+    }
+    .admin-login-sub {
+      max-width: 290px;
+      margin: 6px auto 18px;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.6;
+    }
+    .admin-login form { text-align: left; }
+    .admin-login .field { margin-bottom: 12px; }
+    .admin-login-submit { width: 100%; height: 42px; }
+    .admin-login-foot {
+      margin-top: 16px;
+      color: var(--faint);
+      font-size: 10px;
+      line-height: 1.55;
+    }
+
+    .admin-scroll {
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      min-height: 0;
+      padding: 18px 22px 22px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--line-strong) transparent;
+    }
+    .admin-scroll::-webkit-scrollbar { width: 9px; }
+    .admin-scroll::-webkit-scrollbar-thumb {
+      border: 3px solid var(--surface);
+      border-radius: 99px;
+      background: var(--line-strong);
+    }
+
+    .admin-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .admin-summary {
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .admin-add {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 38px;
+      padding: 0 13px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: var(--ink);
+      color: var(--bg);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease), box-shadow 0.2s ease;
+    }
+    .admin-add svg { width: 14px; height: 14px; }
+    .admin-add:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px -14px color-mix(in srgb, var(--ink) 70%, transparent);
+    }
+
+    .admin-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .admin-list.is-busy { opacity: 0.6; }
+
+    .admin-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--surface);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .admin-row:hover { border-color: var(--line-strong); }
+
+    .admin-app-icon {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: var(--cat-soft);
+      color: var(--cat);
+    }
+    .admin-app-icon svg { width: 17px; height: 17px; }
+    .admin-row.is-archived .admin-app-icon { opacity: 0.62; }
+
+    .admin-app-text {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+      gap: 3px;
+    }
+
+    .admin-app-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .admin-name-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .admin-flag { display: inline-flex; flex: none; color: var(--faint); }
+    .admin-flag svg { width: 11px; height: 11px; }
+
+    .admin-app-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 450;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .admin-row.is-archived .admin-app-meta { color: var(--muted); }
+    .meta-sep {
+      flex: none;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--line-strong);
+    }
+
+    .admin-row-actions { display: flex; align-items: center; gap: 2px; flex: none; }
+
+    .icon-action {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+    .icon-action svg { width: 15px; height: 15px; }
+    .icon-action:hover { background: var(--surface-soft); color: var(--ink); }
+    .icon-action.is-danger:hover { background: var(--danger-soft); color: var(--danger); }
+
+    .admin-row.is-confirming {
+      padding: 12px;
+      border-color: color-mix(in srgb, var(--danger) 34%, var(--line));
+      background: color-mix(in srgb, var(--danger-soft) 55%, var(--surface));
+    }
+    .admin-confirm {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex: 1;
+      flex-wrap: wrap;
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+    .admin-confirm small { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; font-weight: 450; }
+    .confirm-actions { display: flex; align-items: center; gap: 6px; flex: none; }
+
+    .admin-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+      padding: 38px 20px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 15px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+    }
+    .admin-empty svg { width: 22px; height: 22px; color: var(--faint); }
+
+    .admin-note {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 10.5px;
+    }
+    .admin-note.is-confirming { color: var(--muted); }
+    .admin-note p { font-size: 10.5px; }
+    .admin-note .note-warning { color: var(--danger); font-weight: 500; }
+    .note-actions { display: flex; align-items: center; gap: 6px; }
+
+    .admin-reset {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 500;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      transition: color 0.18s ease;
+    }
+    .admin-reset:hover { color: var(--ink); }
+
+    .danger-link {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--danger);
+      font-size: 10.5px;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+    }
+
+    /* Form */
+    .admin-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 14px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.18s ease;
+    }
+    .admin-back svg { width: 13px; height: 13px; }
+    .admin-back:hover { color: var(--ink); }
+
+    .admin-form-title {
+      font-size: 17px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+    .admin-form-sub {
+      margin-top: 4px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .field label {
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .field label span { margin-left: 3px; color: var(--muted); font-weight: 450; }
+
+    .field input,
+    .field select {
+      width: 100%;
+      height: 42px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 450;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .field input::placeholder { color: var(--faint); }
+    .field input:focus,
+    .field select:focus {
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+    .field input[aria-invalid="true"] {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--danger) 14%, transparent);
+    }
+
+    .field select {
+      padding-right: 34px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position:
+        calc(100% - 17px) calc(50% + 1px),
+        calc(100% - 12px) calc(50% + 1px);
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+
+    .field-error {
+      margin: 0;
+      color: var(--danger);
+      font-size: 10.5px;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+    .field-error:empty { display: none; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field-row .field { margin-bottom: 14px; }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 2px 0 4px;
+    }
+
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 10px 11px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      cursor: pointer;
+      transition: border-color 0.18s ease, background 0.18s ease;
+    }
+    .check:hover { border-color: var(--line-strong); }
+    .check input {
+      flex: none;
+      width: 15px;
+      height: 15px;
+      margin: 1px 0 0;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .check strong {
+      display: block;
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .check small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 450;
+      line-height: 1.45;
+    }
+    .check.is-disabled { background: var(--surface-soft); }
+    .check.is-disabled strong,
+    .check.is-disabled small { color: var(--muted); }
+    .check.is-disabled input { cursor: not-allowed; }
+
+    .admin-form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .btn-ghost,
+    .btn-primary,
+    .btn-danger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+      padding: 0 14px;
+      border-radius: 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.18s var(--ease), box-shadow 0.2s ease, background 0.18s ease;
+    }
+    .btn-sm { height: 32px; padding: 0 11px; font-size: 10.5px; }
+
+    .btn-ghost {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-ghost:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+
+    .btn-primary {
+      border: 1px solid transparent;
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px -14px color-mix(in srgb, var(--ink) 70%, transparent);
+    }
+
+    .btn-danger {
+      border: 1px solid transparent;
+      background: var(--danger);
+      color: #FFF;
+    }
+    [data-theme="dark"] .btn-danger { color: #1F0A0F; }
+    .btn-danger:hover { transform: translateY(-1px); }
+
+    .quick-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      grid-column: 1 / -1;
+      padding: 34px 20px;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius-lg);
+      background: color-mix(in srgb, var(--surface) 62%, transparent);
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+    }
+    .quick-empty > svg { width: 20px; height: 20px; color: var(--faint); }
+    .quick-empty .empty-btn { margin-top: 6px; }
+
+    /* ------------------------------------------------------------------
+       12. Protected link dialog
+    ------------------------------------------------------------------ */
+    .pass-block { margin-top: 2px; }
+    .pass-block .field { margin-bottom: 12px; }
+
+    .pass-wrap { position: relative; }
+    .pass-wrap input { padding-right: 46px; }
+
+    .pass-toggle {
+      position: absolute;
+      top: 50%;
+      right: 6px;
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transform: translateY(-50%);
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+    .pass-toggle svg { width: 15px; height: 15px; }
+    .pass-toggle:hover { background: var(--surface-soft); color: var(--ink); }
+
+    .pass-hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .unlock-card {
+      position: relative;
+      width: min(420px, 100%);
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 26px 26px 22px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--surface);
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+      transform: translateY(14px) scale(0.985);
+      transition: transform 0.28s var(--ease);
+    }
+    .modal-layer.is-visible .unlock-card { transform: translateY(0) scale(1); }
+    .unlock-card:focus { outline: none; }
+
+    .unlock-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      box-shadow: none;
+    }
+    .unlock-close svg { width: 16px; height: 16px; }
+
+    .unlock-icon {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin: 2px auto 15px;
+      border-radius: 16px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent);
+    }
+    .unlock-icon svg { width: 22px; height: 22px; }
+
+    .unlock-eyebrow {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 9.5px;
+      font-weight: 650;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .unlock-title {
+      max-width: 18ch;
+      margin: 0 auto 6px;
+      font-size: 20px;
+      font-weight: 650;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+      text-wrap: balance;
+    }
+
+    .unlock-desc {
+      max-width: 300px;
+      margin: 0 auto 20px;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.65;
+    }
+
+    .unlock-form { text-align: left; }
+    .unlock-form .field { margin-bottom: 8px; }
+    .unlock-form .field-error { min-height: 16px; }
+    .unlock-form input[aria-invalid="true"] {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--danger) 14%, transparent);
+    }
+
+    .unlock-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      height: 44px;
+      margin-top: 4px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      background: var(--ink);
+      color: var(--bg);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease), box-shadow 0.2s ease;
+    }
+    .unlock-submit svg { width: 15px; height: 15px; }
+    .unlock-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px -16px color-mix(in srgb, var(--ink) 70%, transparent);
+    }
+    .unlock-submit:disabled { opacity: 0.65; cursor: wait; transform: none; box-shadow: none; }
+
+    .unlock-cancel {
+      margin-top: 11px;
+      padding: 4px 8px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.18s ease, background 0.18s ease;
+    }
+    .unlock-cancel:hover { background: var(--surface-soft); color: var(--ink); }
+
+    .unlock-hint {
+      margin-top: 10px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 10.5px;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .unlock-hint code {
+      padding: 1px 5px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: var(--surface);
+      color: var(--ink);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+    }
+
+    .unlock-missing {
+      padding: 4px 0 0;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.65;
+    }
+    .unlock-missing .btn-primary { width: 100%; margin-top: 14px; }
+
+    @keyframes unlockShake {
+      10%, 90% { transform: translateX(-1px); }
+      20%, 80% { transform: translateX(2px); }
+      30%, 50%, 70% { transform: translateX(-4px); }
+      40%, 60% { transform: translateX(4px); }
+    }
+    .unlock-card.is-shaking { animation: unlockShake 0.4s ease; }
+
+    .app-flag.is-unlocked,
+    .quick-lock.is-unlocked { color: var(--cat-quranverse); }
+
+    @media (max-width: 640px) {
+      .unlock-card {
+        width: 100%;
+        max-height: 92vh;
+        padding: 24px 20px 20px;
+        border-radius: 20px 20px 0 0;
+        border-bottom: 0;
+      }
+      .unlock-title { font-size: 19px; }
+      .unlock-close { top: 12px; right: 12px; }
+    }
+
+    /* ------------------------------------------------------------------
+       13. Responsive
+    ------------------------------------------------------------------ */
+    @media (min-width: 1360px) {
+      .app-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 1099px) {
+      .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 1023px) {
+      .app-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .clock-date { display: none; }
+      .clock { min-width: 0; padding: 8px 11px; }
+    }
+
+    @media (max-width: 899px) {
+      .filters { margin-left: 0; }
+      .search { max-width: none; }
+    }
+
+    @media (max-width: 767px) {
+      .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 719px) {
+      .header-inner { padding-top: 12px; padding-bottom: 12px; }
+      .brand-mark { width: 38px; height: 38px; border-radius: 11px; font-size: 11.5px; }
+      .brand-name { font-size: 11.5px; letter-spacing: 0.15em; }
+      .brand-sub { font-size: 10px; }
+      .admin-btn { width: 40px; padding: 0; }
+      .admin-btn span { display: none; }
+      .hero-mobile-date { display: inline-flex; }
+      .section-head .text-link { display: none; }
+      .search kbd { display: none; }
+      .search input { padding-right: 44px; }
+      .toolbar { gap: 10px; }
+      .filters { width: 100%; }
+      .chip { height: 40px; }
+      .hero { padding-bottom: 34px; }
+      .hero h1 { margin-top: 16px; }
+      .hero-lead { font-size: 13.5px; max-width: 480px; }
+      .hero-meta { margin-top: 22px; }
+      .site-footer { margin-top: 10px; }
+    }
+
+    @media (max-width: 640px) {
+      .modal-layer { align-items: flex-end; padding: 0; }
+      .admin-panel {
+        width: 100%;
+        max-height: 92vh;
+        border-radius: 20px 20px 0 0;
+        border-bottom: 0;
+        transform: translateY(26px);
+      }
+      .modal-layer.is-visible .admin-panel { transform: translateY(0); }
+      .admin-head { padding: 16px 18px 14px; }
+      .admin-title { font-size: 17px; }
+      .admin-scroll { padding: 15px 18px 20px; }
+      .admin-add { height: 36px; }
+      .admin-row { padding: 9px 10px; gap: 10px; }
+      .admin-row.is-confirming { padding: 11px 12px; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+      .check-grid { grid-template-columns: 1fr; }
+      /* 16px avoids iOS Safari's automatic zoom when a field is focused. */
+      .field input,
+      .field select { height: 44px; font-size: 16px; }
+      .check strong { font-size: 12px; }
+      .check small { font-size: 11px; }
+    }
+
+    @media (max-width: 479px) {
+      .admin-app-meta .meta-link,
+      .admin-app-meta .meta-sep-link { display: none; }
+      .admin-app-icon { width: 34px; height: 34px; border-radius: 10px; }
+      .admin-app-icon svg { width: 16px; height: 16px; }
+      .admin-row-actions .icon-action { width: 30px; }
+      .admin-app-name { align-items: flex-start; }
+      .admin-name-text {
+        display: -webkit-box;
+        white-space: normal;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+      .admin-flag { margin-top: 3px; }
+      .admin-confirm { flex-direction: column; align-items: stretch; }
+      .admin-confirm .confirm-actions { justify-content: flex-end; margin-top: 4px; }
+    }
+
+    @media (max-width: 559px) {
+      .chip { height: 36px; padding: 0 10px; gap: 5px; font-size: 11.5px; }
+      .chip-count { display: none; }
+      .chip svg { width: 12px; height: 12px; }
+      .filters { gap: 3px; }
+
+      .quick-grid { gap: 12px; }
+      .quick-card { min-height: 150px; padding: 15px; border-radius: 16px; }
+      .quick-top { margin-bottom: 14px; }
+      .quick-icon { width: 38px; height: 38px; border-radius: 11px; }
+      .quick-icon svg { width: 17px; height: 17px; }
+      .quick-arrow { width: 26px; height: 26px; }
+      .quick-arrow svg { width: 13px; height: 13px; }
+      .quick-cat { font-size: 8px; letter-spacing: 0.12em; margin-bottom: 5px; }
+      .quick-name { font-size: 13.5px; }
+      .quick-desc { display: none; }
+
+      .app-grid { gap: 12px; }
+      .app-card { min-height: 150px; padding: 14px; border-radius: 15px; }
+      .app-top { margin-bottom: 12px; }
+      .app-icon { width: 36px; height: 36px; border-radius: 10px; }
+      .app-icon svg { width: 17px; height: 17px; }
+      .app-flag { width: 21px; height: 21px; border-radius: 6px; }
+      .app-flag svg { width: 10px; height: 10px; }
+      .app-name { font-size: 12.5px; margin-bottom: 0; line-height: 1.35; }
+      .app-desc { display: none; }
+      .app-footer { padding-top: 9px; gap: 5px; font-size: 9px; }
+      .status-text { display: none; }
+      .app-open { width: 19px; height: 19px; }
+      .app-open svg { width: 11px; height: 11px; }
+
+      .section-title { font-size: 17px; }
+      .section-sub { font-size: 11.5px; }
+      .count-pill { height: 20px; font-size: 10px; }
+
+      .sk-quick { min-height: 150px; padding: 15px; border-radius: 16px; }
+      .sk-quick .sk-icon { width: 38px; height: 38px; border-radius: 11px; }
+      .sk-card { min-height: 150px; padding: 14px; border-radius: 15px; }
+      .sk-card .sk-icon { width: 36px; height: 36px; border-radius: 10px; }
+
+      .hero h1 { font-size: clamp(30px, 9vw, 39px); max-width: 15ch; }
+      .eyebrow { font-size: 9px; letter-spacing: 0.16em; }
+      .empty { padding: 44px 20px; }
+    }
+
+    @media (max-width: 389px) {
+      .brand-sub { display: none; }
+      .clock { padding: 8px 9px; }
+      .header-actions { gap: 6px; }
+      .quick-card { padding: 13px; min-height: 144px; }
+      .quick-arrow { width: 24px; height: 24px; }
+      .app-card { padding: 12px; }
+      .app-flag.is-star { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#library">Skip to application library</a>
+
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true">AA</span>
+        <span class="brand-text">
+          <span class="brand-name">ALIF AMZAR</span>
+          <span class="brand-sub">Personal Workspace</span>
+        </span>
+        <span class="sr-only">— back to top</span>
+      </a>
+
+      <div class="header-actions">
+        <div class="clock" role="group" aria-label="Current date and time">
+          <span class="clock-date" id="clockDate">—</span>
+          <time class="clock-time" id="clockTime" datetime="">—:—</time>
+        </div>
+
+        <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Switch theme">
+          <span class="icon-slot sun" aria-hidden="true"><i data-lucide="sun"></i></span>
+          <span class="icon-slot moon" aria-hidden="true"><i data-lucide="moon"></i></span>
+        </button>
+
+        <button class="admin-btn" id="adminBtn" type="button" aria-label="Open admin dashboard">
+          <i data-lucide="key-round" aria-hidden="true"></i>
+          <span>Admin</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="container">
+      <section class="hero" aria-labelledby="heroTitle">
+        <span class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Assalamu'alaikum</span>
+        <h1 id="heroTitle"><span id="greetingPrefix">Good morning,</span> <span class="accent">Alif.</span></h1>
+        <p class="hero-lead">A calm, considered home for your classroom tools, reward systems, and Qur'an resources — all in one place.</p>
+
+        <div class="hero-meta">
+          <span><strong id="statApps">14</strong> applications</span>
+          <span class="meta-dot" aria-hidden="true"></span>
+          <span><strong id="statSpaces">4</strong> spaces</span>
+          <span class="meta-dot" aria-hidden="true"></span>
+          <span>2026 workspace</span>
+        </div>
+
+        <div class="hero-mobile-date" aria-hidden="true">
+          <i data-lucide="calendar-days"></i>
+          <span id="mobileDate">—</span>
+        </div>
+      </section>
+
+      <section class="section" id="quickAccess" aria-labelledby="quickTitle">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title" id="quickTitle">
+              Quick access
+              <span class="count-pill" id="quickCount">4</span>
+            </h2>
+            <p class="section-sub">The spaces you reach for most.</p>
+          </div>
+          <a class="text-link" href="#library">
+            Browse library
+            <i data-lucide="arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="quick-grid" id="quickGrid" aria-busy="true">
+          <div class="sk-quick" aria-hidden="true">
+            <div class="sk sk-icon"></div>
+            <div class="sk-quick-body">
+              <div class="sk sk-line sk-w-40"></div>
+              <div class="sk sk-line sk-w-85" style="height:12px"></div>
+              <div class="sk sk-line sk-w-65"></div>
+            </div>
+          </div>
+          <div class="sk-quick" aria-hidden="true">
+            <div class="sk sk-icon"></div>
+            <div class="sk-quick-body">
+              <div class="sk sk-line sk-w-40"></div>
+              <div class="sk sk-line sk-w-75" style="height:12px"></div>
+              <div class="sk sk-line sk-w-95"></div>
+            </div>
+          </div>
+          <div class="sk-quick" aria-hidden="true">
+            <div class="sk sk-icon"></div>
+            <div class="sk-quick-body">
+              <div class="sk sk-line sk-w-40"></div>
+              <div class="sk sk-line sk-w-85" style="height:12px"></div>
+              <div class="sk sk-line sk-w-55"></div>
+            </div>
+          </div>
+          <div class="sk-quick" aria-hidden="true">
+            <div class="sk sk-icon"></div>
+            <div class="sk-quick-body">
+              <div class="sk sk-line sk-w-40"></div>
+              <div class="sk sk-line sk-w-65" style="height:12px"></div>
+              <div class="sk sk-line sk-w-85"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="library" aria-labelledby="libraryTitle" tabindex="-1">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title" id="libraryTitle">
+              Application library
+              <span class="count-pill" id="libraryCount">14</span>
+            </h2>
+            <p class="section-sub">Every tool, organised and within reach.</p>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="search" id="searchWrap">
+            <i data-lucide="search" class="search-icon" aria-hidden="true"></i>
+            <label class="sr-only" for="searchInput">Search applications</label>
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Search applications, tools, or categories…"
+              autocomplete="off"
+              spellcheck="false"
+              aria-controls="appGrid"
+            >
+            <kbd aria-hidden="true">/</kbd>
+            <button class="search-clear" id="searchClear" type="button" aria-label="Clear search">
+              <i data-lucide="x" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div class="filters" id="filters" role="group" aria-label="Filter applications"></div>
+        </div>
+
+        <div class="results-line">
+          <span id="resultCount" aria-live="polite">Loading applications…</span>
+          <button class="reset-link" id="resetFilters" type="button" hidden>
+            <i data-lucide="x" aria-hidden="true"></i>
+            Reset filters
+          </button>
+        </div>
+
+        <div class="app-grid" id="appGrid" aria-busy="true">
+          <div class="sk-card" aria-hidden="true">
+            <div class="sk-top"><div class="sk sk-icon"></div><div class="sk sk-flag"></div></div>
+            <div class="sk sk-name"></div>
+            <div class="sk sk-desc"></div>
+            <div class="sk sk-desc-2"></div>
+            <div class="sk sk-foot"></div>
+          </div>
+          <div class="sk-card" aria-hidden="true">
+            <div class="sk-top"><div class="sk sk-icon"></div></div>
+            <div class="sk sk-name"></div>
+            <div class="sk sk-desc"></div>
+            <div class="sk sk-desc-2"></div>
+            <div class="sk sk-foot"></div>
+          </div>
+          <div class="sk-card" aria-hidden="true">
+            <div class="sk-top"><div class="sk sk-icon"></div><div class="sk sk-flag"></div></div>
+            <div class="sk sk-name"></div>
+            <div class="sk sk-desc"></div>
+            <div class="sk sk-desc-2"></div>
+            <div class="sk sk-foot"></div>
+          </div>
+          <div class="sk-card" aria-hidden="true">
+            <div class="sk-top"><div class="sk sk-icon"></div></div>
+            <div class="sk sk-name"></div>
+            <div class="sk sk-desc"></div>
+            <div class="sk sk-desc-2"></div>
+            <div class="sk sk-foot"></div>
+          </div>
+          <div class="sk-card" aria-hidden="true">
+            <div class="sk-top"><div class="sk sk-icon"></div><div class="sk sk-flag"></div></div>
+            <div class="sk sk-name"></div>
+            <div class="sk sk-desc"></div>
+            <div class="sk sk-desc-2"></div>
+            <div class="sk sk-foot"></div>
+          </div>
+          <div class="sk-card" aria-hidden="true">
+            <div class="sk-top"><div class="sk sk-icon"></div></div>
+            <div class="sk sk-name"></div>
+            <div class="sk sk-desc"></div>
+            <div class="sk sk-desc-2"></div>
+            <div class="sk sk-foot"></div>
+          </div>
+          <div class="sk-card" aria-hidden="true">
+            <div class="sk-top"><div class="sk sk-icon"></div><div class="sk sk-flag"></div></div>
+            <div class="sk sk-name"></div>
+            <div class="sk sk-desc"></div>
+            <div class="sk sk-desc-2"></div>
+            <div class="sk sk-foot"></div>
+          </div>
+          <div class="sk-card" aria-hidden="true">
+            <div class="sk-top"><div class="sk sk-icon"></div></div>
+            <div class="sk sk-name"></div>
+            <div class="sk sk-desc"></div>
+            <div class="sk sk-desc-2"></div>
+            <div class="sk sk-foot"></div>
+          </div>
+        </div>
+
+        <div class="empty" id="emptyState" aria-live="polite">
+          <div class="empty-icon"><i data-lucide="search-x" aria-hidden="true"></i></div>
+          <h3 id="emptyTitle">No applications found</h3>
+          <p id="emptyText">Try a different search term, or clear your filters to see everything again.</p>
+          <button class="empty-btn" id="emptyReset" type="button">
+            <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+            Clear search &amp; filters
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span><span class="footer-brand">ALIF AMZAR</span><span class="footer-sep">·</span>Personal LinkHub 2.0</span>
+      <span>Made with care for the classroom<span class="footer-sep">·</span><span id="footerYear">2026</span></span>
+    </div>
+  </footer>
+
+  <div class="modal-layer" id="unlockLayer" hidden>
+    <div class="unlock-card" id="unlockPanel" role="dialog" aria-modal="true" aria-labelledby="unlockTitle" aria-describedby="unlockDesc" tabindex="-1">
+      <button class="icon-btn unlock-close" id="unlockClose" type="button" aria-label="Close unlock dialog" title="Close">
+        <i data-lucide="x" aria-hidden="true"></i>
+      </button>
+
+      <div class="unlock-icon" aria-hidden="true"><i data-lucide="lock-keyhole"></i></div>
+      <span class="unlock-eyebrow" id="unlockEyebrow">Protected link</span>
+      <h2 class="unlock-title" id="unlockTitle">Unlock application</h2>
+      <p class="unlock-desc" id="unlockDesc">Enter the passphrase to open this application.</p>
+
+      <form class="unlock-form" id="unlockForm" novalidate>
+        <div class="field">
+          <label class="sr-only" for="unlockInput">Passphrase</label>
+          <div class="pass-wrap">
+            <input id="unlockInput" type="password" autocomplete="off" placeholder="Enter passphrase" aria-describedby="unlockError unlockHint" spellcheck="false">
+            <button class="pass-toggle" id="unlockToggle" type="button" aria-label="Show passphrase">
+              <i data-lucide="eye" aria-hidden="true"></i>
+            </button>
+          </div>
+          <p class="field-error" id="unlockError" role="alert"></p>
+        </div>
+
+        <p class="unlock-hint" id="unlockHint" hidden>Preview passphrase: <code>gamma2026</code></p>
+
+        <button class="unlock-submit" id="unlockSubmit" type="submit">
+          <i data-lucide="lock-open" aria-hidden="true"></i>
+          <span>Unlock link</span>
+        </button>
+      </form>
+
+      <div class="unlock-missing" id="unlockMissing" hidden>
+        <p>No passphrase has been set for this protected link yet.</p>
+        <button class="btn-primary" id="unlockSetup" type="button">Set a passphrase</button>
+      </div>
+
+      <button class="unlock-cancel" id="unlockCancel" type="button">Cancel</button>
+    </div>
+  </div>
+
+  <div class="modal-layer" id="adminLayer" hidden>
+    <div class="admin-panel" id="adminPanel" role="dialog" aria-modal="true" aria-labelledby="adminTitle" tabindex="-1">
+      <div class="admin-head">
+        <div class="admin-head-text">
+          <span class="admin-eyebrow">Workspace settings</span>
+          <div class="admin-title-row">
+            <h2 class="admin-title" id="adminTitle">Manage applications</h2>
+            <span class="admin-mode" id="adminModeBadge" hidden>Live</span>
+          </div>
+        </div>
+        <div class="admin-head-actions">
+          <button class="icon-btn admin-signout" id="adminLogout" type="button" aria-label="Sign out of admin" title="Sign out" hidden>
+            <i data-lucide="log-out" aria-hidden="true"></i>
+          </button>
+          <button class="icon-btn admin-close" id="adminClose" type="button" aria-label="Close admin panel" title="Close">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-scroll" id="adminScroll">
+        <div class="admin-login" id="adminLoginView" hidden>
+          <div class="admin-login-icon" aria-hidden="true"><i data-lucide="shield-check"></i></div>
+          <span class="admin-eyebrow">Protected area</span>
+          <h3 class="admin-login-title">Admin sign in</h3>
+          <p class="admin-login-sub">Sign in to manage applications, links, and passphrases.</p>
+
+          <form id="adminLoginForm" novalidate>
+            <div class="field">
+              <label for="adminPassword">Admin password</label>
+              <div class="pass-wrap">
+                <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Enter admin password" aria-describedby="adminLoginError">
+                <button class="pass-toggle" id="adminLoginToggle" type="button" aria-label="Show password">
+                  <i data-lucide="eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <p class="field-error" id="adminLoginError" role="alert"></p>
+            </div>
+            <button class="btn-primary admin-login-submit" id="adminLoginSubmit" type="submit">Sign in</button>
+          </form>
+
+          <p class="admin-login-foot">Sessions last up to 6 hours. Your password is verified by Google Apps Script.</p>
+        </div>
+
+        <div id="adminListView">
+          <div class="admin-bar">
+            <p class="admin-summary" id="adminSummary" aria-live="polite">Loading…</p>
+            <div class="admin-bar-actions">
+              <button class="admin-reorder" id="adminReorderBtn" type="button">
+                <i data-lucide="arrow-up-down" aria-hidden="true"></i>
+                <span>Reorder</span>
+              </button>
+              <button class="admin-add" id="addAppBtn" type="button">
+                <i data-lucide="plus" aria-hidden="true"></i>
+                <span>Add application</span>
+              </button>
+            </div>
+          </div>
+
+          <p class="admin-reorder-hint" id="adminReorderHint" hidden>Use the arrows to set the order. Changes save automatically.</p>
+
+          <ul class="admin-list" id="adminList" aria-label="All applications"></ul>
+
+          <div class="admin-empty" id="adminEmpty" hidden>
+            <i data-lucide="layout-grid" aria-hidden="true"></i>
+            <p>No applications yet. Add your first one to get started.</p>
+          </div>
+
+          <div class="admin-note" id="adminNote"></div>
+        </div>
+
+        <form class="admin-form" id="appForm" novalidate hidden>
+          <button class="admin-back" id="formBack" type="button">
+            <i data-lucide="arrow-left" aria-hidden="true"></i>
+            Back to list
+          </button>
+
+          <h3 class="admin-form-title" id="formTitle">Add application</h3>
+          <p class="admin-form-sub">A name, a category, and a link are all you need.</p>
+
+          <div class="field">
+            <label for="fieldName">Name</label>
+            <input id="fieldName" name="name" type="text" maxlength="60" autocomplete="off" placeholder="e.g. Weekly Reflection" aria-describedby="nameError">
+            <p class="field-error" id="nameError" role="alert"></p>
+          </div>
+
+          <div class="field">
+            <label for="fieldDesc">Description <span>Optional</span></label>
+            <input id="fieldDesc" name="description" type="text" maxlength="140" autocomplete="off" placeholder="A short line about what it does">
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="fieldCategory">Category</label>
+              <select id="fieldCategory" name="category"></select>
+            </div>
+            <div class="field">
+              <label for="fieldUrl">Link <span>Optional</span></label>
+              <input id="fieldUrl" name="url" type="text" inputmode="url" autocomplete="off" placeholder="https://…" aria-describedby="urlError">
+              <p class="field-error" id="urlError" role="alert"></p>
+            </div>
+          </div>
+
+          <div class="check-grid">
+            <label class="check" for="fieldFavorite">
+              <input id="fieldFavorite" type="checkbox" aria-describedby="favoriteHint">
+              <span>
+                <strong>Pin to Quick access</strong>
+                <small id="favoriteHint">4 of 4 slots used.</small>
+              </span>
+            </label>
+            <label class="check" for="fieldProtected">
+              <input id="fieldProtected" type="checkbox">
+              <span>
+                <strong>Protected link</strong>
+                <small>Requires a passphrase to open.</small>
+              </span>
+            </label>
+          </div>
+
+          <div class="pass-block" id="passBlock" hidden>
+            <div class="field">
+              <label for="fieldPassphrase">Passphrase</label>
+              <div class="pass-wrap">
+                <input id="fieldPassphrase" type="password" autocomplete="new-password" maxlength="64" placeholder="Create a passphrase" aria-describedby="passHint passError" spellcheck="false">
+                <button class="pass-toggle" id="passToggle" type="button" aria-label="Show passphrase">
+                  <i data-lucide="eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <p class="pass-hint" id="passHint">At least 4 characters. Saved as a salted hash on this device.</p>
+              <p class="field-error" id="passError" role="alert"></p>
+            </div>
+          </div>
+
+          <div class="admin-form-actions">
+            <button class="btn-ghost" id="formCancel" type="button">Cancel</button>
+            <button class="btn-primary" id="formSave" type="submit">Save application</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <noscript>
+    <div class="noscript">This workspace needs JavaScript enabled to display your applications.</div>
+  </noscript>
+
+  <div class="offline" id="offlineBanner" role="status" aria-live="polite" hidden>
+    <i data-lucide="cloud-off" aria-hidden="true"></i>
+    <span>You’re offline — showing the last loaded workspace.</span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script>
+    (function () {
+      'use strict';
+
+      /* ----------------------------------------------------------------
+         Configuration
+         Paste the deployed Google Apps Script Web App URL below (ends in
+         /exec). Leave it empty to run the local demo mode.
+      ---------------------------------------------------------------- */
+      var API_URL = 'https://script.google.com/macros/s/AKfycbxZTEKCOA3QS499JxFSbMNvc9ZtzFdhK4aPK9A392eypQQtEKQMwOP4YQUFMscT_p5KKQ/exec';
+
+      var apiMode = API_URL !== '';
+      var SESSION_TOKEN_KEY = 'linkhub-admin-token-v1';
+
+      /* ----------------------------------------------------------------
+         Data — local sample set, persisted in this browser
+      ---------------------------------------------------------------- */
+      var STORAGE_KEY = 'linkhub-apps-v1';
+      var MAX_FAVORITES = 4;
+
+      var DEFAULT_CATEGORY_LIST = [
+        { key: 'classroom', label: 'Classroom', order: 1 },
+        { key: 'rewards', label: 'Rewards', order: 2 },
+        { key: 'quranverse', label: 'Quranverse', order: 3 },
+        { key: 'resources', label: 'Resources', order: 4 }
+      ];
+
+      var KNOWN_CATEGORY_KEYS = ['classroom', 'rewards', 'quranverse', 'resources'];
+
+      var CATEGORY_META = {
+        classroom:  { label: 'Classroom' },
+        rewards:    { label: 'Rewards' },
+        quranverse: { label: 'Quranverse' },
+        resources:  { label: 'Resources' }
+      };
+
+      var CATEGORY_ORDER = ['classroom', 'rewards', 'quranverse', 'resources'];
+
+      var CATEGORY_ICON = {
+        classroom:  'presentation',
+        rewards:    'gift',
+        quranverse: 'book-open',
+        resources:  'folder-open'
+      };
+
+      // Demo passphrases for the seeded protected applications, stored as
+      // SHA-256(salt + ':' + passphrase). The demo passphrase is documented
+      // in README.md so it is never shipped inside this file.
+      var SAMPLE_PASSWORDS = {
+        'token-1-gamma': {
+          salt: 't1g-demo',
+          hash: '4236d6d0e7c5de6ddf41cd25f719bc74d9ff37f223b4e85a6bbe91b30a742e25'
+        },
+        'token-2-beta': {
+          salt: 't2b-demo',
+          hash: 'a70fd4e6cc626c991f89f91f3d4410d5ba3f80e9f08c1face9efa368bac9840a'
+        },
+        'token-3-alpha': {
+          salt: 't3a-demo',
+          hash: '6c346bd5f02fa91fad7036a48629d7750c5619f870fdbc57c85859e56d219f47'
+        },
+        'public-storage': {
+          salt: 'ps-demo',
+          hash: '0118654ebd85c7515075b3f31fa0bb0c6e92ee1d4153eb30434d423140190172'
+        }
+      };
+
+      var SAMPLE_APPS = [
+        {
+          id: 'jadual-waktu',
+          name: 'Jadual Waktu',
+          description: 'A clear, weekly view of every class you teach.',
+          category: 'classroom',
+          icon: 'calendar-days',
+          favorite: false,
+          status: 'active',
+          protected: false,
+          order: 1,
+          url: ''
+        },
+        {
+          id: 'rpm-2026',
+          name: 'Rekod Perkembangan Murid 2026',
+          description: 'RPM progress notes and student development records.',
+          category: 'classroom',
+          icon: 'notebook-pen',
+          favorite: true,
+          status: 'active',
+          protected: false,
+          order: 2,
+          url: ''
+        },
+        {
+          id: 'wheel-of-names',
+          name: 'Wheel of Names',
+          description: 'A playful random-name picker for class participation.',
+          category: 'classroom',
+          icon: 'dices',
+          favorite: false,
+          status: 'active',
+          protected: false,
+          order: 3,
+          url: ''
+        },
+        {
+          id: 'sistem-giliran',
+          name: 'Sistem Giliran Kelas',
+          description: 'Fair turn-taking and class rotation, without the guesswork.',
+          category: 'classroom',
+          icon: 'list-ordered',
+          favorite: false,
+          status: 'active',
+          protected: false,
+          order: 4,
+          url: ''
+        },
+        {
+          id: 'kehadiran-kelas',
+          name: 'Kehadiran Kelas',
+          description: 'Daily attendance logs, kept simple and quick.',
+          category: 'classroom',
+          icon: 'user-check',
+          favorite: false,
+          status: 'active',
+          protected: false,
+          order: 5,
+          url: ''
+        },
+        {
+          id: 'token-1-gamma',
+          name: 'Token 1 Gamma',
+          description: 'Reward tokens and points for Class Gamma.',
+          category: 'rewards',
+          icon: 'coins',
+          favorite: true,
+          status: 'active',
+          protected: true,
+          order: 6,
+          url: ''
+        },
+        {
+          id: 'token-2-beta',
+          name: 'Token 2 Beta',
+          description: 'Reward tokens and points for Class Beta.',
+          category: 'rewards',
+          icon: 'gem',
+          favorite: false,
+          status: 'active',
+          protected: true,
+          order: 7,
+          url: ''
+        },
+        {
+          id: 'token-3-alpha',
+          name: 'Token 3 Alpha',
+          description: 'Reward tokens and points for Class Alpha.',
+          category: 'rewards',
+          icon: 'crown',
+          favorite: false,
+          status: 'active',
+          protected: true,
+          order: 8,
+          url: ''
+        },
+        {
+          id: 'quranverse-1-gamma',
+          name: 'Quranverse 1 Gamma',
+          description: "Qur'an learning and progress for Class Gamma.",
+          category: 'quranverse',
+          icon: 'book-open',
+          favorite: true,
+          status: 'active',
+          protected: false,
+          order: 9,
+          url: ''
+        },
+        {
+          id: 'quranverse-2-beta',
+          name: 'Quranverse 2 Beta',
+          description: "Qur'an learning and progress for Class Beta.",
+          category: 'quranverse',
+          icon: 'book-marked',
+          favorite: false,
+          status: 'active',
+          protected: false,
+          order: 10,
+          url: ''
+        },
+        {
+          id: 'quranverse-3-alpha',
+          name: 'Quranverse 3 Alpha',
+          description: "Qur'an learning and progress for Class Alpha.",
+          category: 'quranverse',
+          icon: 'book-heart',
+          favorite: false,
+          status: 'active',
+          protected: false,
+          order: 11,
+          url: ''
+        },
+        {
+          id: 'rto-alif-amzar',
+          name: 'RTO Alif Amzar',
+          description: 'Teaching resources, templates, and day-to-day operations.',
+          category: 'resources',
+          icon: 'briefcase',
+          favorite: true,
+          status: 'active',
+          protected: false,
+          order: 12,
+          url: ''
+        },
+        {
+          id: 'public-storage',
+          name: 'Public Storage',
+          description: 'Shared files, documents, and classroom storage.',
+          category: 'resources',
+          icon: 'hard-drive',
+          favorite: false,
+          status: 'active',
+          protected: true,
+          order: 13,
+          url: ''
+        },
+        {
+          id: 'rpm-2025',
+          name: 'Rekod Perkembangan Murid 2025',
+          description: 'Previous-year RPM records, kept for reference only.',
+          category: 'classroom',
+          icon: 'archive',
+          favorite: false,
+          status: 'archived',
+          protected: false,
+          order: 14,
+          url: ''
+        }
+      ];
+
+      var APPS = [];
+
+      /* ----------------------------------------------------------------
+         Element references and state
+      ---------------------------------------------------------------- */
+      var root = document.documentElement;
+      var themeMeta = document.querySelector('meta[name="theme-color"]');
+      var themeToggle = document.getElementById('themeToggle');
+      var header = document.getElementById('siteHeader');
+      var quickGrid = document.getElementById('quickGrid');
+      var appGrid = document.getElementById('appGrid');
+      var quickCount = document.getElementById('quickCount');
+      var libraryCount = document.getElementById('libraryCount');
+      var statApps = document.getElementById('statApps');
+      var statSpaces = document.getElementById('statSpaces');
+      var resultCount = document.getElementById('resultCount');
+      var emptyState = document.getElementById('emptyState');
+      var emptyTitle = document.getElementById('emptyTitle');
+      var emptyText = document.getElementById('emptyText');
+      var filters = document.getElementById('filters');
+      var searchWrap = document.getElementById('searchWrap');
+      var searchInput = document.getElementById('searchInput');
+      var searchClear = document.getElementById('searchClear');
+      var resetFilters = document.getElementById('resetFilters');
+      var toast = document.getElementById('toast');
+      var offlineBanner = document.getElementById('offlineBanner');
+
+      var state = {
+        category: 'all',
+        status: 'all',
+        query: '',
+        loading: true,
+        connectionError: false
+      };
+
+      var toastTimer = null;
+      var clockTimer = null;
+      var storageFailed = false;
+      var storageRecovered = false;
+
+      var adminToken = '';
+      var authenticated = !apiMode;
+      var adminBusy = false;
+      var reorderMode = false;
+      var reorderBusy = false;
+
+      var adminOpen = false;
+      var adminLastFocused = null;
+      var editingId = null;
+      var pendingDeleteId = null;
+      var confirmingReset = false;
+      var deleteArmedAt = 0;
+      var resetArmedAt = 0;
+      var adminEls = {};
+
+      var unlockedIds = {};
+      var unlockedUrls = {};
+      var unlockOpen = false;
+      var unlockBusy = false;
+      var unlockRequest = 0;
+      var unlockLastFocused = null;
+      var unlockAppId = null;
+      var unlockEls = {};
+
+      /* ----------------------------------------------------------------
+         Utilities
+      ---------------------------------------------------------------- */
+      function escapeHTML(value) {
+        return String(value).replace(/[&<>"']/g, function (character) {
+          return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+          }[character];
+        });
+      }
+
+      function icon(name) {
+        return '<i data-lucide="' + name + '" aria-hidden="true"></i>';
+      }
+
+      function paintIcons() {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons({
+            attrs: { 'stroke-width': 1.75 }
+          });
+        }
+      }
+
+      function getApp(id) {
+        for (var i = 0; i < APPS.length; i++) {
+          if (APPS[i].id === id) return APPS[i];
+        }
+        return null;
+      }
+
+      function publicApps() {
+        return APPS.filter(function (app) { return app.status !== 'hidden'; });
+      }
+
+      function categoryName(key) {
+        return CATEGORY_META[key] ? CATEGORY_META[key].label : key;
+      }
+
+      function categoryClass(key) {
+        return KNOWN_CATEGORY_KEYS.indexOf(key) !== -1 ? 'category-' + key : 'category-default';
+      }
+
+      function applyCategories(list) {
+        var source = Array.isArray(list) && list.length ? list : DEFAULT_CATEGORY_LIST;
+        var clean = [];
+        var seen = {};
+
+        source.forEach(function (category, index) {
+          if (!category || typeof category.key !== 'string') return;
+          var key = category.key.trim().toLowerCase();
+          if (!/^[a-z0-9-]+$/.test(key) || seen[key]) return;
+
+          var label = typeof category.label === 'string' && category.label.trim()
+            ? category.label.trim().slice(0, 40)
+            : key;
+          var order = Number(category.order);
+
+          clean.push({ key: key, label: label, order: isFinite(order) ? order : index + 1 });
+          seen[key] = true;
+        });
+
+        if (!clean.length) clean = DEFAULT_CATEGORY_LIST.slice();
+        clean.sort(function (a, b) { return a.order - b.order; });
+
+        CATEGORY_ORDER = clean.map(function (category) { return category.key; });
+        CATEGORY_META = {};
+        clean.forEach(function (category) {
+          CATEGORY_META[category.key] = { label: category.label };
+        });
+
+        if (statSpaces) statSpaces.textContent = String(CATEGORY_ORDER.length);
+
+        if (adminEls.category) {
+          var selected = adminEls.category.value;
+          adminEls.category.innerHTML = CATEGORY_ORDER.map(function (key) {
+            return '<option value="' + key + '">' + escapeHTML(categoryName(key)) + '</option>';
+          }).join('');
+          if (selected && CATEGORY_META[selected]) adminEls.category.value = selected;
+        }
+      }
+
+      function appCardHref(app) {
+        if (app.protected) {
+          var unlockedUrl = isUnlocked(app.id) ? getUnlockedUrl(app.id) : '';
+          return unlockedUrl ? escapeHTML(unlockedUrl) : '#';
+        }
+        return app.url ? escapeHTML(app.url) : '#';
+      }
+
+      /* ----------------------------------------------------------------
+         Persistence
+      ---------------------------------------------------------------- */
+      function cloneApps(list) {
+        return JSON.parse(JSON.stringify(list));
+      }
+
+      function defaultIcon(category) {
+        return CATEGORY_ICON[category] || 'layout-grid';
+      }
+
+      function makeAppId(name) {
+        var slug = String(name).toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+          .slice(0, 36);
+        return (slug || 'application') + '-' + Date.now().toString(36);
+      }
+
+      function normalizeUrl(value) {
+        var raw = String(value || '').trim();
+        if (!raw) return { ok: true, url: '' };
+        if (/\s/.test(raw)) return { ok: false, url: '' };
+
+        var candidate = /^[a-z][a-z0-9+.-]*:/i.test(raw) ? raw : 'https://' + raw;
+
+        try {
+          var parsed = new URL(candidate);
+          if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+            return { ok: false, url: '' };
+          }
+
+          var host = parsed.hostname;
+          if (!host || host.indexOf('.') === -1 || host.indexOf('..') !== -1 ||
+              host.charAt(0) === '.' || host.charAt(host.length - 1) === '.') {
+            return { ok: false, url: '' };
+          }
+
+          return { ok: true, url: parsed.href };
+        } catch (error) {
+          return { ok: false, url: '' };
+        }
+      }
+
+      function normalizeStoredApp(item, index) {
+        if (!item || typeof item !== 'object') return null;
+
+        var name = typeof item.name === 'string' ? item.name.trim().slice(0, 60) : '';
+        if (!name) return null;
+
+        var category = CATEGORY_META[item.category] ? item.category : 'classroom';
+        var status = item.status === 'archived' ? 'archived' : 'active';
+        var normalized = normalizeUrl(item.url);
+        var order = Number(item.order);
+        var storedId = typeof item.id === 'string' ? item.id.trim() : '';
+        var passwordHash = typeof item.passwordHash === 'string' && /^[a-f0-9]{64}$/i.test(item.passwordHash)
+          ? item.passwordHash.toLowerCase()
+          : '';
+        var passwordSalt = typeof item.passwordSalt === 'string' ? item.passwordSalt.slice(0, 64) : '';
+        if (!passwordSalt) passwordHash = '';
+
+        return {
+          id: /^[a-z0-9-]+$/i.test(storedId) ? storedId : makeAppId(name),
+          name: name,
+          description: typeof item.description === 'string' ? item.description.trim().slice(0, 140) : '',
+          category: category,
+          icon: typeof item.icon === 'string' && /^[a-z0-9-]+$/.test(item.icon) ? item.icon : defaultIcon(category),
+          favorite: item.favorite === true && status === 'active',
+          status: status,
+          protected: item.protected === true,
+          order: isFinite(order) ? order : index + 1,
+          url: normalized.ok ? normalized.url : '',
+          passwordAlgo: passwordHash ? 'sha256' : '',
+          passwordSalt: passwordHash ? passwordSalt : '',
+          passwordHash: passwordHash,
+          samplePass: item.samplePass === true && !!passwordHash
+        };
+      }
+
+      function loadApps() {
+        var raw = null;
+        try { raw = localStorage.getItem(STORAGE_KEY); } catch (error) { return null; }
+        if (raw === null) return null;
+
+        try {
+          var parsed = JSON.parse(raw);
+          var list = parsed && Array.isArray(parsed.apps) ? parsed.apps : (Array.isArray(parsed) ? parsed : null);
+          if (!list) throw new Error('Unexpected data shape');
+
+          var seen = {};
+          var apps = [];
+          var pinned = 0;
+
+          list.forEach(function (item, index) {
+            var app = normalizeStoredApp(item, index);
+            if (!app) return;
+            if (seen[app.id]) app.id = makeAppId(app.name);
+            seen[app.id] = true;
+            apps.push(app);
+          });
+
+          apps.sort(function (a, b) { return a.order - b.order; });
+
+          apps.forEach(function (app) {
+            if (!app.favorite) return;
+            if (pinned >= MAX_FAVORITES) {
+              app.favorite = false;
+            } else {
+              pinned += 1;
+            }
+          });
+
+          return apps;
+        } catch (error) {
+          storageRecovered = true;
+          return null;
+        }
+      }
+
+      function saveApps() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, apps: APPS }));
+          storageFailed = false;
+          return true;
+        } catch (error) {
+          storageFailed = true;
+          if (adminOpen) renderAdminNote();
+          return false;
+        }
+      }
+
+      function ensureSamplePasswords() {
+        APPS.forEach(function (app) {
+          var sample = SAMPLE_PASSWORDS[app.id];
+          if (!sample || !app.protected || app.passwordHash) return;
+          app.passwordAlgo = 'sha256';
+          app.passwordSalt = sample.salt;
+          app.passwordHash = sample.hash;
+          app.samplePass = true;
+        });
+      }
+
+      /* ----------------------------------------------------------------
+         Protected links — hashing and session unlocks
+      ---------------------------------------------------------------- */
+      function bytesToHex(buffer) {
+        var bytes = new Uint8Array(buffer);
+        var out = '';
+        for (var i = 0; i < bytes.length; i++) {
+          out += ('0' + bytes[i].toString(16)).slice(-2);
+        }
+        return out;
+      }
+
+      function makeSalt() {
+        var bytes = new Uint8Array(16);
+        if (window.crypto && window.crypto.getRandomValues) {
+          window.crypto.getRandomValues(bytes);
+        } else {
+          for (var i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+        }
+        return bytesToHex(bytes);
+      }
+
+      function hashPassphrase(passphrase, salt) {
+        if (!window.crypto || !window.crypto.subtle || !window.TextEncoder) {
+          return Promise.resolve('');
+        }
+
+        var data = new TextEncoder().encode(salt + ':' + passphrase);
+        return window.crypto.subtle.digest('SHA-256', data).then(bytesToHex, function () {
+          return '';
+        });
+      }
+
+      function hashesMatch(a, b) {
+        if (!a || !b || a.length !== b.length) return false;
+        var diff = 0;
+        for (var i = 0; i < a.length; i++) {
+          diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+        }
+        return diff === 0;
+      }
+
+      function loadUnlocked() {
+        var out = {};
+        try {
+          var raw = sessionStorage.getItem('linkhub-unlocked-v1');
+          if (raw) {
+            var list = JSON.parse(raw);
+            if (Array.isArray(list)) {
+              list.forEach(function (id) {
+                if (typeof id === 'string' && id) out[id] = true;
+              });
+            }
+          }
+        } catch (error) { /* session storage unavailable */ }
+
+        try {
+          var rawUrls = sessionStorage.getItem('linkhub-unlocked-urls-v1');
+          if (rawUrls) {
+            var urls = JSON.parse(rawUrls);
+            if (urls && typeof urls === 'object') unlockedUrls = urls;
+          }
+        } catch (error) { /* session storage unavailable */ }
+
+        return out;
+      }
+
+      function saveUnlocked() {
+        try {
+          sessionStorage.setItem('linkhub-unlocked-v1', JSON.stringify(Object.keys(unlockedIds)));
+          sessionStorage.setItem('linkhub-unlocked-urls-v1', JSON.stringify(unlockedUrls));
+        } catch (error) { /* session storage unavailable */ }
+      }
+
+      function isUnlocked(id) {
+        return unlockedIds[id] === true;
+      }
+
+      function getUnlockedUrl(id) {
+        return unlockedUrls[id] || '';
+      }
+
+      function grantUnlock(id, url) {
+        unlockedIds[id] = true;
+        if (url) unlockedUrls[id] = url;
+        saveUnlocked();
+      }
+
+      function revokeUnlock(id) {
+        if (!unlockedIds[id] && !unlockedUrls[id]) return;
+        delete unlockedIds[id];
+        delete unlockedUrls[id];
+        saveUnlocked();
+      }
+
+      function appHasPassword(app) {
+        return !!(app && (app.hasPassword || (app.passwordHash && app.passwordSalt)));
+      }
+
+      /* ----------------------------------------------------------------
+         API transport — Google Apps Script
+      ---------------------------------------------------------------- */
+      function loadToken() {
+        if (!apiMode) return;
+        try { adminToken = sessionStorage.getItem(SESSION_TOKEN_KEY) || ''; }
+        catch (error) { adminToken = ''; }
+      }
+
+      function saveToken(token) {
+        adminToken = token || '';
+        try {
+          if (adminToken) sessionStorage.setItem(SESSION_TOKEN_KEY, adminToken);
+          else sessionStorage.removeItem(SESSION_TOKEN_KEY);
+        } catch (error) { /* session storage unavailable */ }
+      }
+
+      function clearToken() {
+        saveToken('');
+      }
+
+      function apiCall(action, payload) {
+        if (!apiMode) return Promise.reject(new Error('The workspace service is not configured.'));
+
+        var body = { action: action };
+        if (payload) {
+          Object.keys(payload).forEach(function (key) { body[key] = payload[key]; });
+        }
+        if (adminToken) body.adminToken = adminToken;
+
+        var options = {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(body),
+          redirect: 'follow'
+        };
+
+        var timer = null;
+        if (typeof AbortController === 'function') {
+          var controller = new AbortController();
+          options.signal = controller.signal;
+          timer = window.setTimeout(function () { controller.abort(); }, 20000);
+        }
+
+        return fetch(API_URL, options)
+          .then(function (response) {
+            if (!response.ok) {
+              var httpError = new Error('The workspace service returned an error.');
+              httpError.code = 'HTTP';
+              throw httpError;
+            }
+            return response.json();
+          })
+          .then(function (data) {
+            if (!data || data.ok !== true) {
+              var error = new Error((data && data.error) || 'The request could not be completed.');
+              error.code = data && data.code;
+              throw error;
+            }
+            return data;
+          })
+          .catch(function (error) {
+            if (error && error.name === 'AbortError') {
+              var timeoutError = new Error('The workspace service took too long to respond.');
+              timeoutError.code = 'TIMEOUT';
+              throw timeoutError;
+            }
+
+            if (!error || !error.code) {
+              var networkError = new Error('Couldn’t reach the workspace service. Check your connection and try again.');
+              networkError.code = 'NETWORK';
+              throw networkError;
+            }
+
+            throw error;
+          })
+          .finally(function () {
+            if (timer) window.clearTimeout(timer);
+          });
+      }
+
+      function normalizeApiApp(item) {
+        if (!item || typeof item !== 'object') return null;
+
+        var name = typeof item.name === 'string' ? item.name.trim().slice(0, 60) : '';
+        if (!name) return null;
+
+        var category = typeof item.category === 'string' && /^[a-z0-9-]+$/i.test(item.category)
+          ? item.category.toLowerCase()
+          : (CATEGORY_ORDER[0] || 'classroom');
+        var order = Number(item.order);
+        var id = typeof item.id === 'string' ? item.id.trim() : '';
+
+        return {
+          id: /^[a-z0-9-]+$/i.test(id) ? id : makeAppId(name),
+          name: name,
+          description: typeof item.description === 'string' ? item.description.trim().slice(0, 140) : '',
+          category: category,
+          icon: typeof item.icon === 'string' && /^[a-z0-9-]+$/i.test(item.icon) ? item.icon : defaultIcon(category),
+          favorite: item.favorite === true,
+          status: item.status === 'archived' ? 'archived' : 'active',
+          protected: item.protected === true,
+          order: isFinite(order) ? order : 0,
+          url: typeof item.url === 'string' ? item.url : '',
+          hasPassword: item.hasPassword === true || !!(item.passwordHash && item.passwordSalt),
+          samplePass: false
+        };
+      }
+
+      function applyWorkspaceData(data, animate) {
+        var list = Array.isArray(data && data.apps) ? data.apps : [];
+        APPS = list.map(normalizeApiApp).filter(Boolean);
+        applyCategories(data && data.categories);
+        state.loading = false;
+        state.connectionError = false;
+        refreshDashboard(animate);
+
+        if (adminOpen) {
+          if (!apiMode || authenticated) {
+            if (adminEls.loginView) adminEls.loginView.hidden = true;
+            if (adminEls.listView) adminEls.listView.hidden = false;
+            renderAdminList();
+            renderAdminAccess();
+          } else {
+            showAdminLogin();
+          }
+        }
+
+        if (animate) {
+          paintIcons();
+        }
+      }
+
+      function connectionFailed(message) {
+        state.loading = false;
+        state.connectionError = true;
+        APPS = [];
+        updateStats();
+        renderFilters();
+        renderQuickAccess();
+        renderApps(false);
+        if (message) showToast(message, 'alert-triangle');
+      }
+
+      function updateStats() {
+        var active = publicApps().filter(function (app) { return app.status !== 'archived'; }).length;
+        var pending = state.loading || state.connectionError;
+        var display = pending ? '—' : String(active);
+        statApps.textContent = display;
+        libraryCount.textContent = display;
+        if (statSpaces) {
+          statSpaces.textContent = pending ? '—' : String(CATEGORY_ORDER.length);
+        }
+      }
+
+      function retryWorkspaceLoad() {
+        if (!apiMode || state.loading) return;
+        state.loading = true;
+        state.connectionError = false;
+        showToast('Reconnecting to your workspace…', 'refresh-cw');
+
+        apiCall('bootstrap').then(function (data) {
+          saveToken(data.authenticated ? adminToken : '');
+          authenticated = !!(data.authenticated || !apiMode);
+          applyWorkspaceData(data, true);
+          showToast('Workspace connected.', 'check');
+        }).catch(function (error) {
+          connectionFailed(error && error.code === 'TIMEOUT'
+            ? 'The workspace took too long to respond. Try again.'
+            : 'Couldn’t load your workspace. Check the service URL and try again.');
+        });
+      }
+
+      function loadWorkspace() {
+        unlockedIds = loadUnlocked();
+
+        if (!apiMode) {
+          var storedApps = loadApps();
+          APPS = storedApps === null ? cloneApps(SAMPLE_APPS) : storedApps;
+          ensureSamplePasswords();
+          authenticated = true;
+
+          if (storageRecovered) saveApps();
+
+          state.loading = false;
+          refreshDashboard(true);
+
+          if (storageRecovered) {
+            showToast('Your saved applications couldn’t be read, so the sample set is loaded.', 'alert-triangle');
+          }
+          return;
+        }
+
+        apiCall('bootstrap').then(function (data) {
+          if (adminToken && !data.authenticated) clearToken();
+          authenticated = !!data.authenticated;
+          applyWorkspaceData(data, true);
+        }).catch(function (error) {
+          connectionFailed(error && error.code === 'TIMEOUT'
+            ? 'The workspace took too long to respond. Check the connection and try again.'
+            : 'Couldn’t load your workspace. Check the Apps Script URL and try again.');
+        });
+      }
+
+      /* ----------------------------------------------------------------
+         Theme
+      ---------------------------------------------------------------- */
+      function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        if (themeMeta) {
+          themeMeta.setAttribute('content', theme === 'dark' ? '#0B1220' : '#F8FAFC');
+        }
+        themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        themeToggle.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      }
+
+      function initTheme() {
+        applyTheme(root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+
+        themeToggle.addEventListener('click', function () {
+          var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          applyTheme(next);
+          try { localStorage.setItem('linkhub-theme', next); } catch (error) { /* storage unavailable */ }
+        });
+
+        var media = window.matchMedia('(prefers-color-scheme: dark)');
+        var onSystemChange = function (event) {
+          var saved = null;
+          try { saved = localStorage.getItem('linkhub-theme'); } catch (error) { /* storage unavailable */ }
+          if (!saved) applyTheme(event.matches ? 'dark' : 'light');
+        };
+
+        if (typeof media.addEventListener === 'function') {
+          media.addEventListener('change', onSystemChange);
+        } else if (typeof media.addListener === 'function') {
+          media.addListener(onSystemChange);
+        }
+      }
+
+      /* ----------------------------------------------------------------
+         Clock and greeting
+      ---------------------------------------------------------------- */
+      function initClock() {
+        var dateFormatter = new Intl.DateTimeFormat('en-GB', {
+          weekday: 'short', day: 'numeric', month: 'short'
+        });
+        var timeFormatter = new Intl.DateTimeFormat('en-GB', {
+          hour: '2-digit', minute: '2-digit', hour12: false
+        });
+        var longDateFormatter = new Intl.DateTimeFormat('en-GB', {
+          weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+        });
+
+        var clockDate = document.getElementById('clockDate');
+        var clockTime = document.getElementById('clockTime');
+        var mobileDate = document.getElementById('mobileDate');
+        var greetingPrefix = document.getElementById('greetingPrefix');
+        var footerYear = document.getElementById('footerYear');
+
+        function tick() {
+          var now = new Date();
+          var hour = now.getHours();
+          var greeting = hour < 12 ? 'Good morning,' : (hour < 18 ? 'Good afternoon,' : 'Good evening,');
+
+          clockDate.textContent = dateFormatter.format(now);
+          clockTime.textContent = timeFormatter.format(now);
+          clockTime.setAttribute('datetime', now.toISOString());
+          mobileDate.textContent = longDateFormatter.format(now);
+          greetingPrefix.textContent = greeting;
+          footerYear.textContent = String(now.getFullYear());
+        }
+
+        tick();
+        if (clockTimer) window.clearInterval(clockTimer);
+        clockTimer = window.setInterval(tick, 15000);
+      }
+
+      /* ----------------------------------------------------------------
+         Filters
+      ---------------------------------------------------------------- */
+      function countByCategory(category) {
+        return publicApps().filter(function (app) {
+          return app.category === category && app.status !== 'archived';
+        }).length;
+      }
+
+      function renderFilters() {
+        var active = publicApps().filter(function (app) { return app.status !== 'archived'; }).length;
+        var archived = publicApps().filter(function (app) { return app.status === 'archived'; }).length;
+        var markup = '';
+
+        markup += '<button class="chip" type="button" data-filter="all" aria-pressed="true">' +
+          '<span>All</span><span class="chip-count">' + active + '</span></button>';
+
+        CATEGORY_ORDER.forEach(function (key) {
+          markup += '<button class="chip ' + categoryClass(key) + '" type="button" data-filter="' + key + '" aria-pressed="false">' +
+            '<span class="chip-dot" aria-hidden="true"></span>' +
+            '<span>' + escapeHTML(categoryName(key)) + '</span>' +
+            '<span class="chip-count">' + countByCategory(key) + '</span></button>';
+        });
+
+        if (archived > 0) {
+          markup += '<button class="chip" type="button" data-filter="archived" aria-pressed="false">' +
+            icon('archive') + '<span>Archived</span><span class="chip-count">' + archived + '</span></button>';
+        }
+
+        filters.innerHTML = markup;
+        updateFilterUI();
+        paintIcons();
+      }
+
+      function updateFilterUI() {
+        var activeKey = state.status === 'archived' ? 'archived' : state.category;
+        var buttons = filters.querySelectorAll('[data-filter]');
+
+        for (var i = 0; i < buttons.length; i++) {
+          var isActive = buttons[i].getAttribute('data-filter') === activeKey;
+          buttons[i].setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        }
+
+        var filtered = isFiltered();
+        resetFilters.hidden = !filtered;
+      }
+
+      function isFiltered() {
+        return state.category !== 'all' || state.status !== 'all' || state.query.trim() !== '';
+      }
+
+      function getFilteredApps() {
+        var query = state.query.trim().toLowerCase();
+
+        return publicApps().filter(function (app) {
+          if (state.status === 'archived') {
+            if (app.status !== 'archived') return false;
+          } else if (app.status === 'archived') {
+            return false;
+          }
+          if (state.category !== 'all' && app.category !== state.category) return false;
+
+          if (query) {
+            var haystack = (app.name + ' ' + app.description + ' ' + categoryName(app.category)).toLowerCase();
+            if (haystack.indexOf(query) === -1) return false;
+          }
+
+          return true;
+        }).sort(function (a, b) {
+          return a.order - b.order;
+        });
+      }
+
+      /* ----------------------------------------------------------------
+         Rendering — quick access
+      ---------------------------------------------------------------- */
+      function renderQuickAccess() {
+        if (state.connectionError) {
+          quickCount.textContent = '—';
+          quickGrid.innerHTML = '<div class="quick-empty">' +
+            icon('cloud-off') +
+            '<p>Workspace data is unavailable.</p>' +
+            '<button class="empty-btn" type="button" data-retry-workspace>' + icon('refresh-cw') + 'Try again</button>' +
+            '</div>';
+          quickGrid.setAttribute('aria-busy', 'false');
+          paintIcons();
+          return;
+        }
+
+        var featured = publicApps()
+          .filter(function (app) { return app.favorite && app.status === 'active'; })
+          .sort(function (a, b) { return a.order - b.order; })
+          .slice(0, 4);
+
+        quickCount.textContent = String(featured.length);
+
+        if (!featured.length) {
+          quickGrid.innerHTML = '<div class="quick-empty">' +
+            icon('pin') +
+            '<p>Pin up to four applications to keep them here.</p>' +
+            '<button class="empty-btn" type="button" data-open-admin>' + icon('settings-2') + 'Manage applications</button>' +
+            '</div>';
+          quickGrid.setAttribute('aria-busy', 'false');
+          paintIcons();
+          return;
+        }
+
+        quickGrid.innerHTML = featured.map(function (app, index) {
+          var unlocked = app.protected && isUnlocked(app.id);
+          var locked = '';
+          if (app.protected) {
+            locked = unlocked
+              ? '<span class="quick-lock is-unlocked" title="Unlocked this session">' + icon('lock-open') +
+                  '<span class="sr-only">Unlocked this session</span></span>'
+              : '<span class="quick-lock" title="Protected link">' + icon('lock-keyhole') +
+                  '<span class="sr-only">Protected link</span></span>';
+          }
+          var href = appCardHref(app);
+          var dialogAttr = app.protected && !unlocked ? ' aria-haspopup="dialog"' : '';
+
+          return '<a class="quick-card ' + categoryClass(app.category) + ' animate" style="--i:' + index + '" ' +
+            'href="' + href + '" data-app-id="' + escapeHTML(app.id) + '"' + dialogAttr + '>' +
+              '<div class="quick-top">' +
+                '<span class="quick-icon">' + icon(app.icon) + '</span>' +
+                '<span class="quick-arrow">' + icon('arrow-up-right') + '</span>' +
+              '</div>' +
+              '<div class="quick-content">' +
+                '<span class="quick-cat">' + escapeHTML(categoryName(app.category)) + locked + '</span>' +
+                '<span class="quick-name">' + escapeHTML(app.name) + '</span>' +
+                (app.description ? '<p class="quick-desc">' + escapeHTML(app.description) + '</p>' : '') +
+              '</div>' +
+            '</a>';
+        }).join('');
+
+        quickGrid.setAttribute('aria-busy', 'false');
+        paintIcons();
+      }
+
+      /* ----------------------------------------------------------------
+         Rendering — application library
+      ---------------------------------------------------------------- */
+      function renderApps(animate) {
+        if (state.loading) return;
+
+        if (state.connectionError) {
+          appGrid.innerHTML = '';
+          appGrid.hidden = true;
+          emptyState.classList.add('is-visible');
+          emptyTitle.textContent = 'Couldn’t load your workspace';
+          emptyText.textContent = 'Check the connection to your Apps Script service, then try again.';
+          emptyReset.innerHTML = icon('refresh-cw') + ' Try again';
+          emptyReset.setAttribute('data-empty-action', 'retry');
+          resultCount.textContent = '0 applications';
+          appGrid.setAttribute('aria-busy', 'false');
+          updateFilterUI();
+          paintIcons();
+          return;
+        }
+
+        var list = getFilteredApps();
+        var archivedView = state.status === 'archived';
+        var archivedCount = publicApps().filter(function (app) { return app.status === 'archived'; }).length;
+        var total = archivedView
+          ? archivedCount
+          : publicApps().filter(function (app) { return app.status !== 'archived'; }).length;
+
+        if (list.length) {
+          appGrid.innerHTML = list.map(function (app, index) {
+            var archived = app.status === 'archived';
+            var unlocked = app.protected && isUnlocked(app.id);
+            var favoriteFlag = app.favorite
+              ? '<span class="app-flag is-star" title="Favorite">' + icon('star') +
+                  '<span class="sr-only">Favorite</span></span>'
+              : '';
+            var lockFlag = app.protected
+              ? (unlocked
+                  ? '<span class="app-flag is-lock is-unlocked" title="Unlocked this session">' + icon('lock-open') +
+                      '<span class="sr-only">Unlocked this session</span></span>'
+                  : '<span class="app-flag is-lock" title="Protected link">' + icon('lock-keyhole') +
+                      '<span class="sr-only">Protected link</span></span>')
+              : '';
+            var cardClass = 'app-card ' + categoryClass(app.category) + (archived ? ' is-archived' : '') + (animate ? ' animate' : '');
+            var delayStyle = animate ? ' style="--i:' + Math.min(index, 14) + '"' : '';
+            var href = appCardHref(app);
+            var dialogAttr = app.protected && !unlocked ? ' aria-haspopup="dialog"' : '';
+
+            return '<a class="' + cardClass + '"' + delayStyle + ' ' +
+              'href="' + href + '" data-app-id="' + escapeHTML(app.id) + '"' + dialogAttr + '>' +
+                '<div class="app-top">' +
+                  '<span class="app-icon">' + icon(app.icon) + '</span>' +
+                  ((favoriteFlag || lockFlag) ? '<span class="app-flags">' + favoriteFlag + lockFlag + '</span>' : '') +
+                '</div>' +
+                '<h3 class="app-name">' + escapeHTML(app.name) + '</h3>' +
+                (app.description ? '<p class="app-desc">' + escapeHTML(app.description) + '</p>' : '') +
+                '<div class="app-footer">' +
+                  '<span class="app-cat"><span class="cat-dot" aria-hidden="true"></span>' + escapeHTML(categoryName(app.category)) + '</span>' +
+                  '<span class="app-status' + (archived ? ' is-archived' : '') + '">' +
+                    '<span class="status-dot" aria-hidden="true"></span>' +
+                    '<span class="status-text">' + (archived ? 'Archived' : 'Active') + '</span>' +
+                  '</span>' +
+                  '<span class="app-open">' + icon('arrow-up-right') + '</span>' +
+                '</div>' +
+              '</a>';
+          }).join('');
+
+          appGrid.hidden = false;
+          emptyState.classList.remove('is-visible');
+        } else {
+          appGrid.innerHTML = '';
+          appGrid.hidden = true;
+          emptyState.classList.add('is-visible');
+
+          if (!publicApps().length) {
+            emptyTitle.textContent = 'Your library is empty';
+            emptyText.textContent = 'Add your first application from the admin panel to get started.';
+            emptyReset.innerHTML = icon('plus') + ' Add application';
+            emptyReset.setAttribute('data-empty-action', 'add');
+          } else if (!total && archivedCount) {
+            emptyTitle.textContent = 'Everything is archived';
+            emptyText.textContent = 'Active applications are hidden. Open the archived view to restore one.';
+            emptyReset.innerHTML = icon('archive') + ' View archived';
+            emptyReset.setAttribute('data-empty-action', 'archived');
+          } else {
+            emptyReset.innerHTML = icon('rotate-ccw') + ' Clear search & filters';
+            emptyReset.removeAttribute('data-empty-action');
+
+            if (state.query.trim()) {
+              emptyTitle.textContent = 'No match for “' + state.query.trim() + '”';
+              emptyText.textContent = 'Try a shorter phrase, a different spelling, or clear your filters to see every application.';
+            } else if (state.status === 'archived') {
+              emptyTitle.textContent = 'Nothing archived yet';
+              emptyText.textContent = 'Applications you archive will appear here, quietly out of the way.';
+            } else {
+              emptyTitle.textContent = 'No applications here yet';
+              emptyText.textContent = 'Try another category, or clear your filters to see everything again.';
+            }
+          }
+        }
+
+        resultCount.textContent = list.length === total
+          ? total + (total === 1 ? ' application' : ' applications')
+          : list.length + ' of ' + total + ' applications';
+
+        appGrid.setAttribute('aria-busy', 'false');
+        updateFilterUI();
+        paintIcons();
+      }
+
+      /* ----------------------------------------------------------------
+         Search and filter interaction
+      ---------------------------------------------------------------- */
+      function syncSearchUI() {
+        searchWrap.classList.toggle('has-value', searchInput.value.length > 0);
+      }
+
+      function resetAll() {
+        state.category = 'all';
+        state.status = 'all';
+        state.query = '';
+        searchInput.value = '';
+        syncSearchUI();
+        updateFilterUI();
+        renderApps(false);
+      }
+
+      function initControls() {
+        filters.addEventListener('click', function (event) {
+          var button = event.target.closest('[data-filter]');
+          if (!button) return;
+
+          var filter = button.getAttribute('data-filter');
+
+          if (filter === 'archived') {
+            state.status = state.status === 'archived' ? 'all' : 'archived';
+            state.category = 'all';
+          } else {
+            state.status = 'all';
+            state.category = filter;
+          }
+
+          updateFilterUI();
+          renderApps(false);
+        });
+
+        searchInput.addEventListener('input', function () {
+          state.query = searchInput.value;
+          syncSearchUI();
+          updateFilterUI();
+          renderApps(false);
+        });
+
+        searchClear.addEventListener('click', function () {
+          state.query = '';
+          searchInput.value = '';
+          syncSearchUI();
+          updateFilterUI();
+          renderApps(false);
+          searchInput.focus();
+        });
+
+        resetFilters.addEventListener('click', resetAll);
+        document.getElementById('emptyReset').addEventListener('click', function () {
+          var emptyAction = this.getAttribute('data-empty-action');
+          if (emptyAction === 'retry') {
+            retryWorkspaceLoad();
+            return;
+          }
+          if (emptyAction === 'add') {
+            openAdmin();
+            if (!apiMode || authenticated) showAdminForm(null);
+            return;
+          }
+          if (emptyAction === 'archived') {
+            state.status = 'archived';
+            state.category = 'all';
+            state.query = '';
+            searchInput.value = '';
+            syncSearchUI();
+            updateFilterUI();
+            renderApps(false);
+            return;
+          }
+          resetAll();
+          searchInput.focus();
+        });
+
+        document.addEventListener('keydown', function (event) {
+          if (adminOpen || unlockOpen) return;
+
+          var target = event.target;
+          var typing = target && (
+            target.tagName === 'INPUT' ||
+            target.tagName === 'TEXTAREA' ||
+            target.tagName === 'SELECT' ||
+            target.isContentEditable
+          );
+
+          if (event.key === '/' && !typing && !event.metaKey && !event.ctrlKey && !event.altKey) {
+            event.preventDefault();
+            searchInput.focus();
+            return;
+          }
+
+          if (event.key === 'Escape' && (target === searchInput || searchInput.value)) {
+            if (searchInput.value) {
+              state.query = '';
+              searchInput.value = '';
+              syncSearchUI();
+              updateFilterUI();
+              renderApps(false);
+            }
+            searchInput.blur();
+          }
+        });
+      }
+
+      /* ----------------------------------------------------------------
+         Card actions and toast
+      ---------------------------------------------------------------- */
+      function showToast(message, iconName) {
+        toast.innerHTML = icon(iconName || 'info') + '<span>' + escapeHTML(message) + '</span>';
+        paintIcons();
+        toast.classList.add('is-visible');
+
+        if (toastTimer) window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(function () {
+          toast.classList.remove('is-visible');
+        }, 3400);
+      }
+
+      /* ----------------------------------------------------------------
+         Admin — manage applications
+      ---------------------------------------------------------------- */
+      function refreshDashboard(animate) {
+        var archivedCount = APPS.filter(function (app) { return app.status === 'archived'; }).length;
+        if (state.status === 'archived' && archivedCount === 0) {
+          state.status = 'all';
+          state.category = 'all';
+        }
+
+        updateStats();
+        renderFilters();
+        renderQuickAccess();
+        renderApps(!!animate);
+      }
+
+      function pinnedCount(excludeId) {
+        return APPS.filter(function (app) {
+          return app.favorite && app.status === 'active' && app.id !== excludeId;
+        }).length;
+      }
+
+      function initAdmin() {
+        var els = adminEls;
+        els.layer = document.getElementById('adminLayer');
+        if (!els.layer) return;
+
+        els.panel = document.getElementById('adminPanel');
+        els.scroll = document.getElementById('adminScroll');
+        els.listView = document.getElementById('adminListView');
+        els.loginView = document.getElementById('adminLoginView');
+        els.loginForm = document.getElementById('adminLoginForm');
+        els.loginPassword = document.getElementById('adminPassword');
+        els.loginToggle = document.getElementById('adminLoginToggle');
+        els.loginError = document.getElementById('adminLoginError');
+        els.loginSubmit = document.getElementById('adminLoginSubmit');
+        els.logout = document.getElementById('adminLogout');
+        els.modeBadge = document.getElementById('adminModeBadge');
+        els.reorderBtn = document.getElementById('adminReorderBtn');
+        els.reorderHint = document.getElementById('adminReorderHint');
+        els.list = document.getElementById('adminList');
+        els.empty = document.getElementById('adminEmpty');
+        els.note = document.getElementById('adminNote');
+        els.summary = document.getElementById('adminSummary');
+        els.close = document.getElementById('adminClose');
+        els.addBtn = document.getElementById('addAppBtn');
+
+        els.form = document.getElementById('appForm');
+        els.formTitle = document.getElementById('formTitle');
+        els.formBack = document.getElementById('formBack');
+        els.formCancel = document.getElementById('formCancel');
+        els.formSave = document.getElementById('formSave');
+        els.name = document.getElementById('fieldName');
+        els.desc = document.getElementById('fieldDesc');
+        els.category = document.getElementById('fieldCategory');
+        els.url = document.getElementById('fieldUrl');
+        els.favorite = document.getElementById('fieldFavorite');
+        els.protected = document.getElementById('fieldProtected');
+        els.favoriteHint = document.getElementById('favoriteHint');
+        els.nameError = document.getElementById('nameError');
+        els.urlError = document.getElementById('urlError');
+        els.passBlock = document.getElementById('passBlock');
+        els.passphrase = document.getElementById('fieldPassphrase');
+        els.passToggle = document.getElementById('passToggle');
+        els.passHint = document.getElementById('passHint');
+        els.passError = document.getElementById('passError');
+
+        els.category.innerHTML = CATEGORY_ORDER.map(function (key) {
+          return '<option value="' + key + '">' + escapeHTML(categoryName(key)) + '</option>';
+        }).join('');
+
+        els.close.addEventListener('click', closeAdmin);
+
+        els.layer.addEventListener('click', function (event) {
+          if (event.target === els.layer) closeAdmin();
+        });
+
+        els.addBtn.addEventListener('click', function () { showAdminForm(null); });
+        els.list.addEventListener('click', onAdminListClick);
+        els.note.addEventListener('click', onAdminNoteClick);
+        els.reorderBtn.addEventListener('click', toggleReorderMode);
+        els.logout.addEventListener('click', adminLogout);
+        els.loginForm.addEventListener('submit', submitAdminLogin);
+        els.loginToggle.addEventListener('click', function () {
+          togglePassVisibility(els.loginPassword, els.loginToggle, 'password');
+        });
+        els.loginPassword.addEventListener('input', function () {
+          if (els.loginPassword.getAttribute('aria-invalid') === 'true') {
+            els.loginPassword.removeAttribute('aria-invalid');
+            els.loginError.textContent = '';
+          }
+        });
+
+        els.form.addEventListener('submit', submitAppForm);
+        els.formBack.addEventListener('click', function () {
+          showAdminList();
+          els.addBtn.focus();
+        });
+        els.formCancel.addEventListener('click', function () {
+          showAdminList();
+          els.addBtn.focus();
+        });
+
+        els.name.addEventListener('input', function () {
+          if (els.name.getAttribute('aria-invalid') === 'true' && els.name.value.trim()) {
+            clearError(els.name, els.nameError);
+          }
+        });
+        els.url.addEventListener('input', function () {
+          if (els.url.getAttribute('aria-invalid') === 'true') {
+            clearError(els.url, els.urlError);
+          }
+        });
+        els.favorite.addEventListener('change', syncFavoriteField);
+        els.protected.addEventListener('change', syncProtectionField);
+        els.passphrase.addEventListener('input', function () {
+          if (els.passphrase.getAttribute('aria-invalid') === 'true') {
+            els.passphrase.removeAttribute('aria-invalid');
+            els.passError.textContent = '';
+          }
+        });
+        els.passToggle.addEventListener('click', function () {
+          togglePassVisibility(els.passphrase, els.passToggle);
+        });
+
+        renderAdminList();
+        renderAdminAccess();
+      }
+
+      function renderAdminAccess() {
+        var els = adminEls;
+        if (!els.modeBadge) return;
+
+        var live = apiMode;
+        els.modeBadge.hidden = false;
+        els.modeBadge.textContent = live ? 'Live' : 'Demo';
+        els.modeBadge.title = live ? 'Connected to Google Sheets' : 'Demo data stored in this browser';
+        els.modeBadge.className = 'admin-mode ' + (live ? 'is-live' : 'is-demo');
+        els.logout.hidden = !(live && authenticated);
+        els.reorderBtn.hidden = !authenticated;
+        els.addBtn.hidden = !authenticated || reorderMode;
+      }
+
+      function showAdminLogin() {
+        var els = adminEls;
+        if (!els.loginView) return;
+
+        reorderMode = false;
+        syncReorderUI();
+        els.loginView.hidden = false;
+        els.listView.hidden = true;
+        if (els.form) els.form.hidden = true;
+        els.loginPassword.value = '';
+        els.loginPassword.type = 'password';
+        els.loginPassword.removeAttribute('aria-invalid');
+        els.loginError.textContent = '';
+        els.loginSubmit.disabled = false;
+        els.loginSubmit.textContent = 'Sign in';
+        setToggleIcon(els.loginToggle, false, 'password');
+        renderAdminAccess();
+        els.logout.hidden = true;
+        window.setTimeout(function () {
+          if (adminOpen) els.loginPassword.focus();
+        }, 60);
+      }
+
+      function submitAdminLogin(event) {
+        event.preventDefault();
+        if (adminBusy) return;
+
+        var els = adminEls;
+        var password = els.loginPassword.value;
+
+        if (!password) {
+          els.loginPassword.setAttribute('aria-invalid', 'true');
+          els.loginError.textContent = 'Enter your admin password.';
+          els.loginPassword.focus();
+          return;
+        }
+
+        adminBusy = true;
+        els.loginSubmit.disabled = true;
+        els.loginSubmit.textContent = 'Signing in…';
+        els.loginError.textContent = '';
+
+        apiCall('login', { password: password }).then(function (data) {
+          adminBusy = false;
+          els.loginSubmit.disabled = false;
+          els.loginSubmit.textContent = 'Sign in';
+
+          saveToken(data.token);
+          authenticated = true;
+          applyWorkspaceData(data, false);
+          els.loginPassword.value = '';
+          showAdminList();
+          renderAdminAccess();
+          showToast('Signed in. Admin tools are unlocked.', 'shield-check');
+        }).catch(function (error) {
+          adminBusy = false;
+          els.loginSubmit.disabled = false;
+          els.loginSubmit.textContent = 'Sign in';
+          els.loginPassword.setAttribute('aria-invalid', 'true');
+
+          if (error && error.code === 'BAD_CREDENTIALS') {
+            els.loginError.textContent = 'That password doesn’t match. Try again.';
+          } else if (error && error.code === 'NOT_CONFIGURED') {
+            els.loginError.textContent = 'The backend has not been set up yet. Run setup() in Apps Script.';
+          } else if (error && error.code === 'TIMEOUT') {
+            els.loginError.textContent = 'The server took too long to respond. Try again.';
+          } else {
+            els.loginError.textContent = 'Couldn’t sign in. Check the connection to your workspace and try again.';
+          }
+
+          els.loginPassword.select();
+        });
+      }
+
+      function adminLogout() {
+        if (adminBusy) return;
+        adminBusy = true;
+
+        var finish = function (signedOut) {
+          adminBusy = false;
+          clearToken();
+          authenticated = !apiMode;
+          APPS.forEach(function (app) {
+            if (app.protected) app.url = '';
+          });
+          closeAdmin();
+          refreshDashboard();
+          showToast(signedOut ? 'Signed out of admin.' : 'Signed out locally.', 'log-out');
+        };
+
+        if (!apiMode) {
+          finish(true);
+          return;
+        }
+
+        apiCall('logout').then(function () {
+          finish(true);
+        }).catch(function () {
+          finish(false);
+        });
+      }
+
+      function handleAuthExpired() {
+        clearToken();
+        authenticated = false;
+        APPS.forEach(function (app) {
+          if (app.protected) app.url = '';
+        });
+        refreshDashboard();
+        if (adminOpen) {
+          showAdminLogin();
+        }
+        showToast('Your admin session expired. Please sign in again.', 'lock-keyhole');
+      }
+
+      function setPageInert(locked) {
+        var nodes = document.querySelectorAll('body > .skip-link, body > header, body > main, body > footer');
+        for (var i = 0; i < nodes.length; i++) {
+          if (locked) nodes[i].setAttribute('inert', '');
+          else nodes[i].removeAttribute('inert');
+        }
+      }
+
+      function openAdmin() {
+        if (adminOpen || unlockOpen) return;
+        var els = adminEls;
+        if (!els.layer) return;
+
+        adminLastFocused = document.activeElement;
+        adminOpen = true;
+        editingId = null;
+        pendingDeleteId = null;
+        confirmingReset = false;
+
+        els.listView.hidden = false;
+        els.form.hidden = true;
+        els.layer.hidden = false;
+        reorderMode = false;
+        syncReorderUI();
+
+        if (apiMode && !authenticated) {
+          showAdminLogin();
+        } else {
+          els.loginView.hidden = true;
+          els.listView.hidden = false;
+          renderAdminList();
+          renderAdminAccess();
+        }
+
+        document.body.classList.add('is-locked');
+        setPageInert(true);
+
+        // Force a style flush so the opening transition runs from its start state.
+        void els.layer.offsetWidth;
+        els.layer.classList.add('is-visible');
+
+        document.addEventListener('keydown', onAdminKeydown, true);
+        els.panel.focus({ preventScroll: true });
+      }
+
+      function closeAdmin() {
+        if (!adminOpen) return;
+        var els = adminEls;
+
+        adminOpen = false;
+        els.layer.classList.remove('is-visible');
+        document.body.classList.remove('is-locked');
+        setPageInert(false);
+        document.removeEventListener('keydown', onAdminKeydown, true);
+
+        window.setTimeout(function () {
+          if (!adminOpen) els.layer.hidden = true;
+        }, 240);
+
+        var restore = adminLastFocused;
+        if (!restore || !document.contains(restore) || restore === document.body || restore === document.documentElement) {
+          restore = document.getElementById('adminBtn');
+        }
+        if (restore) restore.focus({ preventScroll: true });
+        adminLastFocused = null;
+      }
+
+      function adminFocusables() {
+        var nodes = adminEls.panel.querySelectorAll(
+          'button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+        );
+
+        return Array.prototype.filter.call(nodes, function (node) {
+          return !!(node.offsetWidth || node.offsetHeight || node.getClientRects().length);
+        });
+      }
+
+      function onAdminKeydown(event) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (pendingDeleteId) {
+            var cancelledId = pendingDeleteId;
+            pendingDeleteId = null;
+            renderAdminList();
+            focusRowAction(cancelledId, 'delete');
+            return;
+          }
+
+          if (confirmingReset) {
+            confirmingReset = false;
+            renderAdminNote();
+            var resetStart = adminEls.note.querySelector('[data-reset-action="start"]');
+            if (resetStart) resetStart.focus();
+            return;
+          }
+
+          if (!adminEls.form.hidden) {
+            showAdminList();
+            adminEls.addBtn.focus();
+            return;
+          }
+
+          if (reorderMode) {
+            toggleReorderMode();
+            return;
+          }
+
+          closeAdmin();
+          return;
+        }
+
+        if (event.key !== 'Tab') return;
+
+        var items = adminFocusables();
+        if (!items.length) {
+          event.preventDefault();
+          adminEls.panel.focus();
+          return;
+        }
+
+        var first = items[0];
+        var last = items[items.length - 1];
+        var active = document.activeElement;
+
+        if (!adminEls.panel.contains(active)) {
+          event.preventDefault();
+          first.focus();
+          return;
+        }
+
+        if (event.shiftKey && (active === first || active === adminEls.panel)) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+
+      function renderAdminList() {
+        var els = adminEls;
+        if (!els.list) return;
+
+        var active = APPS.filter(function (app) { return app.status !== 'archived'; }).length;
+        var archived = APPS.filter(function (app) { return app.status === 'archived'; }).length;
+
+        els.summary.textContent = active + ' active' + (archived ? ' · ' + archived + ' archived' : '');
+        els.list.hidden = APPS.length === 0;
+        els.empty.hidden = APPS.length > 0;
+        syncReorderUI();
+
+        els.list.innerHTML = APPS.slice()
+          .sort(function (a, b) { return a.order - b.order; })
+          .map(function (app, index, list) { return adminRowMarkup(app, index, list.length); })
+          .join('');
+
+        renderAdminNote();
+        paintIcons();
+      }
+
+      function toggleReorderMode() {
+        if (!authenticated || reorderBusy) return;
+        reorderMode = !reorderMode;
+        pendingDeleteId = null;
+        confirmingReset = false;
+        renderAdminList();
+        showToast(reorderMode
+          ? 'Reorder mode on. Use the arrows to move applications.'
+          : 'Reorder mode off.', reorderMode ? 'arrow-up-down' : 'check');
+        var focusTarget = reorderMode
+          ? adminEls.list.querySelector('[data-admin-action="move-up"]')
+          : adminEls.reorderBtn;
+        if (focusTarget) focusTarget.focus();
+      }
+
+      function syncReorderUI() {
+        var els = adminEls;
+        if (!els.reorderBtn) return;
+        els.reorderBtn.setAttribute('aria-pressed', reorderMode ? 'true' : 'false');
+        els.reorderBtn.querySelector('span').textContent = reorderMode ? 'Done' : 'Reorder';
+        els.reorderHint.hidden = !reorderMode;
+        els.addBtn.hidden = !authenticated || reorderMode;
+        els.list.classList.toggle('is-reordering', reorderMode);
+        if (!reorderBusy) {
+          els.list.classList.remove('is-busy');
+          els.list.setAttribute('aria-busy', 'false');
+        }
+      }
+
+      function adminRowMarkup(app, index, total) {
+        if (pendingDeleteId === app.id) {
+          return '<li class="admin-row is-confirming">' +
+            '<div class="admin-confirm">' +
+              '<span>Delete “' + escapeHTML(app.name) + '”?<small>This can’t be undone.</small></span>' +
+              '<div class="confirm-actions">' +
+                '<button class="btn-ghost btn-sm" type="button" data-admin-action="cancel-delete">Cancel</button>' +
+                '<button class="btn-danger btn-sm" type="button" data-admin-action="confirm-delete">Delete</button>' +
+              '</div>' +
+            '</div>' +
+          '</li>';
+        }
+
+        var flags = '';
+        if (app.favorite) {
+          flags += '<span class="admin-flag" title="Pinned to Quick access">' + icon('star') +
+            '<span class="sr-only">Pinned to Quick access</span></span>';
+        }
+        if (app.protected) {
+          flags += '<span class="admin-flag" title="Protected link">' + icon('lock-keyhole') +
+            '<span class="sr-only">Protected link</span></span>';
+        }
+
+        var isArchived = app.status === 'archived';
+
+        return '<li class="admin-row' + (isArchived ? ' is-archived' : '') + '">' +
+          '<span class="admin-app-icon ' + categoryClass(app.category) + '">' + icon(app.icon) + '</span>' +
+          '<div class="admin-app-text">' +
+            '<span class="admin-app-name">' +
+              '<span class="admin-name-text">' + escapeHTML(app.name) + '</span>' + flags +
+            '</span>' +
+            '<span class="admin-app-meta">' +
+              '<span>' + escapeHTML(categoryName(app.category)) + '</span>' +
+              '<span class="meta-sep" aria-hidden="true"></span>' +
+              '<span>' + (isArchived ? 'Archived' : 'Active') + '</span>' +
+              '<span class="meta-sep meta-sep-link" aria-hidden="true"></span>' +
+              '<span class="meta-link">' + (app.url ? 'Link added' : 'No link') + '</span>' +
+            '</span>' +
+          '</div>' +
+          '<div class="admin-row-actions">' +
+            (reorderMode
+              ? '<button class="icon-action" type="button" data-admin-action="move-up" data-id="' + escapeHTML(app.id) + '" ' +
+                  'aria-label="Move ' + escapeHTML(app.name) + ' up" title="Move up"' + (index === 0 || reorderBusy ? ' disabled' : '') + '>' +
+                  icon('chevron-up') + '</button>' +
+                '<button class="icon-action" type="button" data-admin-action="move-down" data-id="' + escapeHTML(app.id) + '" ' +
+                  'aria-label="Move ' + escapeHTML(app.name) + ' down" title="Move down"' + (index === total - 1 || reorderBusy ? ' disabled' : '') + '>' +
+                  icon('chevron-down') + '</button>'
+              : '<button class="icon-action" type="button" data-admin-action="edit" data-id="' + escapeHTML(app.id) + '" ' +
+                  'aria-label="Edit ' + escapeHTML(app.name) + '" title="Edit">' + icon('pencil') + '</button>' +
+                '<button class="icon-action" type="button" data-admin-action="archive" data-id="' + escapeHTML(app.id) + '" ' +
+                  'aria-label="' + (isArchived ? 'Restore ' : 'Archive ') + escapeHTML(app.name) + '" title="' +
+                  (isArchived ? 'Restore' : 'Archive') + '">' + icon(isArchived ? 'rotate-ccw' : 'archive') + '</button>' +
+                '<button class="icon-action is-danger" type="button" data-admin-action="delete" data-id="' + escapeHTML(app.id) + '" ' +
+                  'aria-label="Delete ' + escapeHTML(app.name) + '" title="Delete">' + icon('trash-2') + '</button>') +
+          '</div>' +
+        '</li>';
+      }
+
+      function renderAdminNote() {
+        var els = adminEls;
+        if (!els.note) return;
+
+        els.note.classList.toggle('is-confirming', confirmingReset);
+
+        if (apiMode) {
+          els.note.innerHTML = '<p>Changes save to your Google Sheet and appear everywhere immediately.</p>';
+          return;
+        }
+
+        if (confirmingReset) {
+          els.note.innerHTML =
+            '<p>Replace all applications with the sample set?</p>' +
+            '<div class="note-actions">' +
+              '<button class="admin-reset" type="button" data-reset-action="cancel">Cancel</button>' +
+              '<button class="danger-link" type="button" data-reset-action="confirm">Replace</button>' +
+            '</div>';
+        } else {
+          els.note.innerHTML =
+            (storageFailed
+              ? '<p class="note-warning">Storage is blocked — changes last for this session only.</p>'
+              : '<p>Changes are saved in this browser on this device.</p>') +
+            '<button class="admin-reset" type="button" data-reset-action="start">Restore sample data</button>';
+        }
+      }
+
+      function onAdminListClick(event) {
+        var trigger = event.target.closest('[data-admin-action]');
+        if (!trigger) return;
+
+        var action = trigger.getAttribute('data-admin-action');
+
+        if (action === 'cancel-delete') {
+          var cancelledId = pendingDeleteId;
+          pendingDeleteId = null;
+          renderAdminList();
+          focusRowAction(cancelledId, 'delete');
+          return;
+        }
+
+        if (action === 'confirm-delete') {
+          if (Date.now() - deleteArmedAt < 300) return;
+          deleteApplication(pendingDeleteId);
+          return;
+        }
+
+        var id = trigger.getAttribute('data-id');
+
+        if (action === 'edit') {
+          showAdminForm(id);
+          return;
+        }
+
+        if (action === 'move-up' || action === 'move-down') {
+          moveApplication(id, action === 'move-up' ? -1 : 1);
+          return;
+        }
+
+        if (action === 'archive') {
+          toggleArchive(id);
+          return;
+        }
+
+        if (action === 'delete') {
+          pendingDeleteId = id;
+          deleteArmedAt = Date.now();
+          renderAdminList();
+          var confirmButton = adminEls.list.querySelector('[data-admin-action="confirm-delete"]');
+          if (confirmButton) confirmButton.focus();
+        }
+      }
+
+      function focusRowAction(id, action) {
+        var buttons = adminEls.list.querySelectorAll('[data-admin-action="' + action + '"]');
+        for (var i = 0; i < buttons.length; i++) {
+          if (buttons[i].getAttribute('data-id') === id) {
+            buttons[i].focus();
+            return;
+          }
+        }
+        adminEls.addBtn.focus();
+      }
+
+      function onAdminNoteClick(event) {
+        var trigger = event.target.closest('[data-reset-action]');
+        if (!trigger) return;
+
+        var action = trigger.getAttribute('data-reset-action');
+
+        if (action === 'start') {
+          confirmingReset = true;
+          resetArmedAt = Date.now();
+          renderAdminNote();
+          var confirmButton = adminEls.note.querySelector('[data-reset-action="confirm"]');
+          if (confirmButton) confirmButton.focus();
+          return;
+        }
+
+        if (action === 'cancel') {
+          confirmingReset = false;
+          renderAdminNote();
+          adminEls.note.querySelector('[data-reset-action="start"]').focus();
+          return;
+        }
+
+        if (action === 'confirm') {
+          if (Date.now() - resetArmedAt < 300) return;
+          restoreSamples();
+        }
+      }
+
+      function applyAdminApps(apps) {
+        APPS = (Array.isArray(apps) ? apps : []).map(normalizeApiApp).filter(Boolean);
+        refreshDashboard();
+        renderAdminList();
+        renderAdminAccess();
+      }
+
+      function moveApplication(id, direction) {
+        if (reorderBusy || !authenticated) return;
+
+        var ordered = APPS.slice().sort(function (a, b) { return a.order - b.order; });
+        var index = -1;
+        for (var i = 0; i < ordered.length; i++) {
+          if (ordered[i].id === id) { index = i; break; }
+        }
+        if (index === -1) return;
+
+        var target = index + direction;
+        if (target < 0 || target >= ordered.length) return;
+
+        var snapshot = cloneApps(APPS);
+        var moved = ordered[index];
+        ordered[index] = ordered[target];
+        ordered[target] = moved;
+        ordered.forEach(function (app, position) { app.order = position + 1; });
+
+        APPS = ordered;
+
+        if (!apiMode) {
+          saveApps();
+          refreshDashboard();
+          renderAdminList();
+          focusMoveAction(id, direction);
+          return;
+        }
+
+        reorderBusy = true;
+        setReorderBusy(true);
+
+        apiCall('reorder', {
+          ids: APPS.slice().sort(function (a, b) { return a.order - b.order; }).map(function (app) { return app.id; })
+        }).then(function (data) {
+          reorderBusy = false;
+          applyAdminApps(data.apps);
+          focusMoveAction(id, direction);
+        }).catch(function (error) {
+          reorderBusy = false;
+          APPS = snapshot;
+          refreshDashboard();
+          renderAdminList();
+
+          if (error && error.code === 'UNAUTHORIZED') {
+            handleAuthExpired();
+          } else {
+            showToast('Couldn’t save the new order. Try again.', 'alert-triangle');
+            focusMoveAction(id, direction);
+          }
+        });
+      }
+
+      function setReorderBusy(busy) {
+        var list = adminEls.list;
+        if (!list) return;
+        list.classList.toggle('is-busy', busy);
+        list.setAttribute('aria-busy', busy ? 'true' : 'false');
+        var moves = list.querySelectorAll('[data-admin-action="move-up"], [data-admin-action="move-down"]');
+        Array.prototype.forEach.call(moves, function (button) {
+          if (busy) button.disabled = true;
+        });
+      }
+
+      function focusMoveAction(id, direction) {
+        var action = direction < 0 ? 'move-up' : 'move-down';
+        var button = adminEls.list.querySelector('[data-admin-action="' + action + '"]' + '[data-id="' + id + '"]');
+        if (!button || button.disabled) {
+          var other = adminEls.list.querySelector('[data-admin-action="' + (direction < 0 ? 'move-down' : 'move-up') + '"]' + '[data-id="' + id + '"]');
+          button = other;
+        }
+        if (button) button.focus();
+        else adminEls.reorderBtn.focus();
+      }
+
+      function toggleArchive(id) {
+        var app = getApp(id);
+        if (!app) return;
+
+        var nextStatus = app.status === 'archived' ? 'active' : 'archived';
+        var wasPinned = app.favorite;
+
+        if (!apiMode) {
+          app.status = nextStatus;
+          if (nextStatus === 'archived') app.favorite = false;
+          revokeUnlock(id);
+          saveApps();
+          refreshDashboard();
+          renderAdminList();
+          focusRowAction(id, 'archive');
+          showToast(nextStatus === 'active'
+            ? '“' + app.name + '” is back in the library.'
+            : (wasPinned ? '“' + app.name + '” was archived and unpinned.' : '“' + app.name + '” was archived.'),
+            nextStatus === 'active' ? 'rotate-ccw' : 'archive');
+          return;
+        }
+
+        if (adminBusy) return;
+        adminBusy = true;
+
+        apiCall('saveApp', {
+          app: {
+            id: app.id,
+            name: app.name,
+            description: app.description,
+            category: app.category,
+            icon: app.icon,
+            url: app.url,
+            protected: app.protected,
+            favorite: nextStatus === 'archived' ? false : app.favorite,
+            status: nextStatus,
+            order: app.order
+          }
+        }).then(function (data) {
+          adminBusy = false;
+          revokeUnlock(id);
+          applyAdminApps(data.apps);
+          focusRowAction(id, 'archive');
+          showToast(nextStatus === 'active'
+            ? '“' + app.name + '” is back in the library.'
+            : (wasPinned ? '“' + app.name + '” was archived and unpinned.' : '“' + app.name + '” was archived.'),
+            nextStatus === 'active' ? 'rotate-ccw' : 'archive');
+        }).catch(function (error) {
+          adminBusy = false;
+          if (error && error.code === 'UNAUTHORIZED') handleAuthExpired();
+          else showToast(error && error.message ? error.message : 'Couldn’t update the application.', 'alert-triangle');
+        });
+      }
+
+      function deleteApplication(id) {
+        var app = getApp(id);
+        if (!app) return;
+
+        if (!apiMode) {
+          APPS = APPS.filter(function (item) { return item.id !== id; });
+          pendingDeleteId = null;
+          revokeUnlock(id);
+
+          saveApps();
+          refreshDashboard();
+          renderAdminList();
+          focusRowAction(id, 'delete');
+          showToast('“' + app.name + '” was deleted.', 'trash-2');
+          return;
+        }
+
+        if (adminBusy) return;
+        adminBusy = true;
+
+        apiCall('deleteApp', { id: id }).then(function (data) {
+          adminBusy = false;
+          pendingDeleteId = null;
+          revokeUnlock(id);
+          applyAdminApps(data.apps);
+          focusRowAction(id, 'delete');
+          showToast('“' + app.name + '” was deleted.', 'trash-2');
+        }).catch(function (error) {
+          adminBusy = false;
+          pendingDeleteId = null;
+          renderAdminList();
+          if (error && error.code === 'UNAUTHORIZED') handleAuthExpired();
+          else showToast(error && error.message ? error.message : 'Couldn’t delete the application.', 'alert-triangle');
+        });
+      }
+
+      function restoreSamples() {
+        if (apiMode) return;
+        APPS = cloneApps(SAMPLE_APPS);
+        ensureSamplePasswords();
+        confirmingReset = false;
+        pendingDeleteId = null;
+
+        unlockedIds = {};
+        unlockedUrls = {};
+        saveUnlocked();
+
+        saveApps();
+        refreshDashboard();
+        showAdminList();
+        adminEls.addBtn.focus();
+        showToast('Sample applications restored.', 'rotate-ccw');
+      }
+
+      function showAdminList() {
+        var els = adminEls;
+        editingId = null;
+        pendingDeleteId = null;
+        confirmingReset = false;
+
+        els.form.hidden = true;
+        els.loginView.hidden = true;
+        els.listView.hidden = false;
+        renderAdminList();
+        els.scroll.scrollTop = 0;
+      }
+
+      function showAdminForm(id) {
+        var els = adminEls;
+        var app = id ? getApp(id) : null;
+
+        editingId = app ? app.id : null;
+        pendingDeleteId = null;
+        confirmingReset = false;
+
+        els.form.reset();
+        clearFormErrors();
+
+        els.formTitle.textContent = app ? 'Edit application' : 'Add application';
+        els.formSave.textContent = app ? 'Save changes' : 'Add application';
+        els.name.value = app ? app.name : '';
+        els.desc.value = app ? app.description : '';
+        els.category.value = app ? app.category : (CATEGORY_ORDER[0] || 'classroom');
+        els.url.value = app ? app.url : '';
+        els.favorite.checked = app && app.status === 'active' ? app.favorite : false;
+        els.protected.checked = app ? app.protected : false;
+        els.passphrase.value = '';
+        els.passphrase.type = 'password';
+        setToggleIcon(els.passToggle, false);
+
+        syncFavoriteField();
+        syncProtectionField();
+
+        els.listView.hidden = true;
+        els.form.hidden = false;
+        els.scroll.scrollTop = 0;
+        els.name.focus();
+      }
+
+      function syncFavoriteField() {
+        var els = adminEls;
+        var editingApp = editingId ? getApp(editingId) : null;
+        var editingArchived = !!(editingApp && editingApp.status === 'archived');
+        var pinned = pinnedCount(editingId);
+        var full = pinned >= MAX_FAVORITES;
+
+        els.favorite.disabled = editingArchived || (full && !els.favorite.checked);
+        els.favorite.closest('.check').classList.toggle('is-disabled', els.favorite.disabled);
+
+        els.favoriteHint.textContent = editingArchived
+          ? 'Archived apps can’t be pinned.'
+          : els.favorite.disabled
+            ? 'Quick access is full — unpin another app first.'
+            : (pinned + (els.favorite.checked ? 1 : 0)) + ' of ' + MAX_FAVORITES + ' slots used.';
+      }
+
+      function syncProtectionField() {
+        var els = adminEls;
+        var app = editingId ? getApp(editingId) : null;
+        var enabled = els.protected.checked;
+
+        els.passBlock.hidden = !enabled;
+
+        if (!enabled) {
+          clearError(els.passphrase, els.passError);
+          return;
+        }
+
+        var hasPassphrase = appHasPassword(app);
+        els.passHint.textContent = hasPassphrase
+          ? 'A passphrase is already set. Leave blank to keep it.'
+          : (apiMode
+              ? 'At least 4 characters. Verified securely by Apps Script.'
+              : 'At least 4 characters. Saved as a salted hash on this device.');
+        els.passphrase.placeholder = hasPassphrase ? 'Leave blank to keep current' : 'Create a passphrase';
+      }
+
+      function setError(input, node, message) {
+        input.setAttribute('aria-invalid', 'true');
+        node.textContent = message;
+      }
+
+      function clearError(input, node) {
+        input.removeAttribute('aria-invalid');
+        node.textContent = '';
+      }
+
+      function clearFormErrors() {
+        clearError(adminEls.name, adminEls.nameError);
+        clearError(adminEls.url, adminEls.urlError);
+        clearError(adminEls.passphrase, adminEls.passError);
+      }
+
+      function submitAppForm(event) {
+        event.preventDefault();
+        if (adminEls.formSave.disabled) return;
+
+        var els = adminEls;
+        var name = els.name.value.trim();
+        var description = els.desc.value.trim();
+        var category = CATEGORY_META[els.category.value] ? els.category.value : (CATEGORY_ORDER[0] || 'classroom');
+        var normalized = normalizeUrl(els.url.value);
+        var existing = editingId ? getApp(editingId) : null;
+        var isProtected = els.protected.checked;
+        var passValue = els.passphrase.value;
+        var firstInvalid = null;
+
+        clearFormErrors();
+
+        if (!name) {
+          setError(els.name, els.nameError, 'Please give this application a name.');
+          firstInvalid = els.name;
+        }
+
+        if (!normalized.ok) {
+          setError(els.url, els.urlError, 'Enter a valid web address, like https://example.com.');
+          if (!firstInvalid) firstInvalid = els.url;
+        }
+
+        if (isProtected) {
+          var hasStoredPass = appHasPassword(existing);
+          if (!passValue && !hasStoredPass) {
+            setError(els.passphrase, els.passError, 'Set a passphrase for this protected link.');
+            if (!firstInvalid) firstInvalid = els.passphrase;
+          } else if (passValue && passValue.length < 4) {
+            setError(els.passphrase, els.passError, 'Use at least 4 characters.');
+            if (!firstInvalid) firstInvalid = els.passphrase;
+          }
+        }
+
+        if (firstInvalid) {
+          firstInvalid.focus();
+          return;
+        }
+
+        return saveApplicationForm(existing, {
+          name: name,
+          description: description,
+          category: category,
+          url: normalized.url,
+          isProtected: isProtected,
+          passValue: passValue
+        });
+      }
+
+      async function saveApplicationForm(existing, values) {
+        var els = adminEls;
+
+        if (apiMode) return saveApplicationToApi(existing, values);
+
+        var nextPass = null;
+
+        if (values.isProtected && values.passValue) {
+          els.formSave.disabled = true;
+          var salt = makeSalt();
+          var hash = await hashPassphrase(values.passValue, salt);
+          els.formSave.disabled = false;
+
+          if (!hash) {
+            setError(els.passphrase, els.passError, 'This browser can’t hash passphrases. Try a modern browser.');
+            els.passphrase.focus();
+            return;
+          }
+
+          nextPass = { salt: salt, hash: hash };
+        }
+
+        var savedId;
+        var urlChanged = !!(existing && existing.url !== values.url);
+
+        if (existing) {
+          existing.name = values.name;
+          existing.description = values.description;
+          existing.category = values.category;
+          existing.url = values.url;
+          existing.favorite = existing.status === 'archived' ? false : els.favorite.checked;
+          existing.protected = values.isProtected;
+
+          if (nextPass) {
+            existing.passwordAlgo = 'sha256';
+            existing.passwordSalt = nextPass.salt;
+            existing.passwordHash = nextPass.hash;
+            existing.samplePass = false;
+            revokeUnlock(existing.id);
+          } else if (!values.isProtected || urlChanged) {
+            if (!values.isProtected) {
+              existing.passwordAlgo = '';
+              existing.passwordSalt = '';
+              existing.passwordHash = '';
+              existing.samplePass = false;
+            }
+            revokeUnlock(existing.id);
+          }
+
+          savedId = existing.id;
+        } else {
+          var maxOrder = 0;
+          APPS.forEach(function (app) {
+            if (Number(app.order) > maxOrder) maxOrder = Number(app.order);
+          });
+
+          var newApp = {
+            id: makeAppId(values.name),
+            name: values.name,
+            description: values.description,
+            category: values.category,
+            icon: defaultIcon(values.category),
+            favorite: els.favorite.checked,
+            status: 'active',
+            protected: values.isProtected,
+            order: maxOrder + 1,
+            url: values.url,
+            passwordAlgo: nextPass ? 'sha256' : '',
+            passwordSalt: nextPass ? nextPass.salt : '',
+            passwordHash: nextPass ? nextPass.hash : '',
+            samplePass: false
+          };
+
+          APPS.push(newApp);
+          savedId = newApp.id;
+        }
+
+        var persisted = saveApps();
+        refreshDashboard();
+        showAdminList();
+
+        var rowButton = els.list.querySelector('[data-admin-action="edit"][data-id="' + savedId + '"]');
+        if (rowButton) rowButton.focus();
+
+        if (persisted) {
+          showToast(existing ? 'Changes saved.' : 'Application added.', existing ? 'check' : 'plus');
+        } else {
+          showToast('Saved for this session only — storage is blocked.', 'alert-triangle');
+        }
+      }
+
+      function saveApplicationToApi(existing, values) {
+        var els = adminEls;
+        if (adminBusy) return;
+
+        adminBusy = true;
+        els.formSave.disabled = true;
+        els.formSave.textContent = existing ? 'Saving…' : 'Adding…';
+
+        var app = {
+          id: existing ? existing.id : '',
+          name: values.name,
+          description: values.description,
+          category: values.category,
+          icon: existing && existing.icon ? existing.icon : defaultIcon(values.category),
+          url: values.url,
+          protected: values.isProtected,
+          favorite: existing && existing.status === 'archived' ? false : els.favorite.checked,
+          status: existing ? existing.status : 'active',
+          order: existing ? existing.order : 0
+        };
+        var urlChanged = !!(existing && existing.url !== values.url);
+
+        apiCall('saveApp', { app: app, passphrase: values.passValue || '' }).then(function (data) {
+          adminBusy = false;
+          els.formSave.disabled = false;
+          els.formSave.textContent = existing ? 'Save changes' : 'Add application';
+
+          var savedId = existing ? existing.id : (data.savedId || '');
+          applyAdminApps(data.apps);
+
+          if (existing && (values.passValue || urlChanged || (existing.protected && !values.isProtected))) {
+            revokeUnlock(existing.id);
+            refreshDashboard();
+          } else if (!existing && savedId) {
+            revokeUnlock(savedId);
+          }
+          showAdminList();
+
+          var rowButton = savedId
+            ? els.list.querySelector('[data-admin-action="edit"][data-id="' + savedId + '"]')
+            : null;
+          if (rowButton) rowButton.focus();
+          else els.addBtn.focus();
+
+          showToast(existing ? 'Changes saved to Google Sheets.' : 'Application added and synced.', existing ? 'check' : 'plus');
+        }).catch(function (error) {
+          adminBusy = false;
+          els.formSave.disabled = false;
+          els.formSave.textContent = existing ? 'Save changes' : 'Add application';
+
+          if (error && error.code === 'UNAUTHORIZED') {
+            handleAuthExpired();
+            return;
+          }
+
+          if (error && error.code === 'PASS_REQUIRED') {
+            setError(els.passphrase, els.passError, 'Set a passphrase for this protected link.');
+            els.passphrase.focus();
+            return;
+          }
+
+          showToast(error && error.message ? error.message : 'Couldn’t save the application.', 'alert-triangle');
+        });
+      }
+
+
+      /* ----------------------------------------------------------------
+         Protected links — unlock dialog
+      ---------------------------------------------------------------- */
+      function initUnlock() {
+        var els = unlockEls;
+        els.layer = document.getElementById('unlockLayer');
+        if (!els.layer) return;
+
+        els.panel = document.getElementById('unlockPanel');
+        els.form = document.getElementById('unlockForm');
+        els.input = document.getElementById('unlockInput');
+        els.toggle = document.getElementById('unlockToggle');
+        els.error = document.getElementById('unlockError');
+        els.hint = document.getElementById('unlockHint');
+        els.submit = document.getElementById('unlockSubmit');
+        els.cancel = document.getElementById('unlockCancel');
+        els.close = document.getElementById('unlockClose');
+        els.title = document.getElementById('unlockTitle');
+        els.eyebrow = document.getElementById('unlockEyebrow');
+        els.missing = document.getElementById('unlockMissing');
+        els.setup = document.getElementById('unlockSetup');
+
+        els.close.addEventListener('click', function () { closeUnlock(true); });
+        els.cancel.addEventListener('click', function () { closeUnlock(true); });
+
+        els.layer.addEventListener('click', function (event) {
+          if (event.target === els.layer) closeUnlock(true);
+        });
+
+        els.form.addEventListener('submit', submitUnlock);
+        els.toggle.addEventListener('click', function () {
+          togglePassVisibility(els.input, els.toggle);
+        });
+
+        els.input.addEventListener('input', function () {
+          if (els.input.getAttribute('aria-invalid') === 'true') {
+            els.input.removeAttribute('aria-invalid');
+            els.error.textContent = '';
+          }
+        });
+
+        els.setup.addEventListener('click', function () {
+          var id = unlockAppId;
+          closeUnlock(false);
+          if (id) {
+            openAdmin();
+            if (apiMode && !authenticated) {
+              showToast('Sign in as admin, then edit the application to set its passphrase.', 'shield-check');
+              return;
+            }
+            showAdminForm(id);
+            adminEls.passphrase.focus();
+          }
+        });
+      }
+
+      function openUnlock(id, trigger) {
+        if (unlockOpen || adminOpen) return;
+
+        var app = getApp(id);
+        if (!app || !app.protected) return;
+
+        var els = unlockEls;
+        unlockOpen = true;
+        unlockAppId = id;
+        unlockLastFocused = trigger || document.activeElement;
+        unlockBusy = false;
+
+        els.layer.hidden = false;
+        els.layer.classList.remove('is-visible');
+
+        els.input.type = 'password';
+        els.input.value = '';
+        els.input.removeAttribute('aria-invalid');
+        els.error.textContent = '';
+        els.submit.disabled = false;
+        setToggleIcon(els.toggle, false);
+
+        els.title.textContent = 'Unlock “' + app.name + '”';
+        els.eyebrow.textContent = categoryName(app.category) + ' · Protected';
+        els.hint.hidden = !(!apiMode && app.samplePass && app.passwordHash);
+
+        var hasPassphrase = appHasPassword(app);
+        els.form.hidden = !hasPassphrase;
+        els.missing.hidden = hasPassphrase;
+
+        document.body.classList.add('is-locked');
+        setPageInert(true);
+        void els.layer.offsetWidth;
+        els.layer.classList.add('is-visible');
+        document.addEventListener('keydown', onUnlockKeydown, true);
+
+        if (hasPassphrase) {
+          els.input.focus();
+        } else {
+          els.setup.focus();
+        }
+      }
+
+      function closeUnlock(restoreFocus) {
+        if (!unlockOpen) return;
+
+        var els = unlockEls;
+        var appId = unlockAppId;
+        unlockOpen = false;
+        unlockRequest += 1;
+
+        els.layer.classList.remove('is-visible');
+        document.body.classList.remove('is-locked');
+        setPageInert(false);
+        document.removeEventListener('keydown', onUnlockKeydown, true);
+
+        window.setTimeout(function () {
+          if (!unlockOpen) els.layer.hidden = true;
+        }, 240);
+
+        if (restoreFocus !== false) {
+          var target = unlockLastFocused;
+          if (!target || !document.contains(target) || target === document.body || target === document.documentElement) {
+            target = appId ? document.querySelector('[data-app-id="' + appId + '"]') : null;
+          }
+          if (target) target.focus({ preventScroll: true });
+        }
+
+        unlockLastFocused = null;
+        unlockAppId = null;
+        unlockBusy = false;
+      }
+
+      function unlockFocusables() {
+        var nodes = unlockEls.panel.querySelectorAll(
+          'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+        );
+
+        return Array.prototype.filter.call(nodes, function (node) {
+          return !!(node.offsetWidth || node.offsetHeight || node.getClientRects().length);
+        });
+      }
+
+      function onUnlockKeydown(event) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          event.stopPropagation();
+          closeUnlock(true);
+          return;
+        }
+
+        if (event.key !== 'Tab') return;
+
+        var items = unlockFocusables();
+        if (!items.length) {
+          event.preventDefault();
+          unlockEls.panel.focus();
+          return;
+        }
+
+        var first = items[0];
+        var last = items[items.length - 1];
+        var active = document.activeElement;
+
+        if (!unlockEls.panel.contains(active)) {
+          event.preventDefault();
+          first.focus();
+          return;
+        }
+
+        if (event.shiftKey && (active === first || active === unlockEls.panel)) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+
+      function setToggleIcon(button, visible, noun) {
+        button.innerHTML = icon(visible ? 'eye-off' : 'eye');
+        button.setAttribute('aria-label', (visible ? 'Hide ' : 'Show ') + (noun || 'passphrase'));
+        button.setAttribute('aria-pressed', visible ? 'true' : 'false');
+        paintIcons();
+      }
+
+      function togglePassVisibility(input, button, noun) {
+        var show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        setToggleIcon(button, show, noun);
+        input.focus();
+      }
+
+      function submitUnlock(event) {
+        event.preventDefault();
+
+        if (unlockBusy) return;
+
+        var els = unlockEls;
+        var app = getApp(unlockAppId);
+        if (!app) return;
+
+        if (!els.input.value) {
+          els.input.setAttribute('aria-invalid', 'true');
+          els.error.textContent = 'Enter the passphrase.';
+          els.input.focus();
+          return;
+        }
+
+        if (!appHasPassword(app)) {
+          els.form.hidden = true;
+          els.missing.hidden = false;
+          els.setup.focus();
+          return;
+        }
+
+        unlockBusy = true;
+        els.submit.disabled = true;
+        els.error.textContent = '';
+        els.input.removeAttribute('aria-invalid');
+        var request = ++unlockRequest;
+        var label = els.submit.querySelector('span');
+        var originalLabel = label ? label.textContent : '';
+        if (label) label.textContent = 'Checking…';
+
+        if (apiMode) {
+          apiCall('unlock', { appId: app.id, password: els.input.value }).then(function (data) {
+            unlockBusy = false;
+            els.submit.disabled = false;
+            if (label) label.textContent = originalLabel;
+            if (request !== unlockRequest || !unlockOpen || unlockAppId !== app.id) return;
+            unlockSuccess(app, data.url || '');
+          }).catch(function (error) {
+            unlockBusy = false;
+            els.submit.disabled = false;
+            if (label) label.textContent = originalLabel;
+            if (request !== unlockRequest || !unlockOpen || unlockAppId !== app.id) return;
+
+            if (error && error.code === 'NO_PASSWORD') {
+              els.form.hidden = true;
+              els.missing.hidden = false;
+              els.setup.focus();
+              return;
+            }
+
+            if (error && error.code === 'BAD_PASSWORD') {
+              els.input.setAttribute('aria-invalid', 'true');
+              els.error.textContent = 'That passphrase doesn’t match. Try again.';
+              els.input.select();
+              els.panel.classList.add('is-shaking');
+              window.setTimeout(function () { els.panel.classList.remove('is-shaking'); }, 450);
+              return;
+            }
+
+            els.input.setAttribute('aria-invalid', 'true');
+            els.error.textContent = 'Couldn’t verify the passphrase. Try again.';
+          });
+          return;
+        }
+
+        hashPassphrase(els.input.value, app.passwordSalt).then(function (hash) {
+          unlockBusy = false;
+          els.submit.disabled = false;
+          if (label) label.textContent = originalLabel;
+          if (request !== unlockRequest || !unlockOpen || unlockAppId !== app.id) return;
+
+          if (!hash) {
+            els.input.setAttribute('aria-invalid', 'true');
+            els.error.textContent = 'This browser can’t verify passphrases.';
+            return;
+          }
+
+          if (!hashesMatch(hash, app.passwordHash)) {
+            els.input.setAttribute('aria-invalid', 'true');
+            els.error.textContent = 'That passphrase doesn’t match. Try again.';
+            els.input.select();
+            els.panel.classList.add('is-shaking');
+            window.setTimeout(function () {
+              els.panel.classList.remove('is-shaking');
+            }, 450);
+            return;
+          }
+
+          unlockSuccess(app, app.url || '');
+        });
+      }
+
+      function unlockSuccess(app, url) {
+        unlockBusy = false;
+        grantUnlock(app.id, url || '');
+
+        if (url) {
+          window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        refreshDashboard();
+        closeUnlock(true);
+
+        if (!url) {
+          showToast('Link unlocked, but no URL has been added yet.', 'lock-open');
+        }
+      }
+
+      function initActions() {
+        document.addEventListener('click', function (event) {
+          var card = event.target.closest('[data-app-id]');
+          if (card) {
+            event.preventDefault();
+            var app = getApp(card.getAttribute('data-app-id'));
+            if (!app) return;
+
+            if (app.status === 'archived') {
+              showToast('This application is archived and has no active link.', 'archive');
+              return;
+            }
+
+            if (app.protected && !isUnlocked(app.id)) {
+              openUnlock(app.id, card);
+              return;
+            }
+
+            var targetUrl = app.protected ? getUnlockedUrl(app.id) : app.url;
+            if (!targetUrl) {
+              showToast('No link has been added for this application yet.', 'link');
+              return;
+            }
+
+            window.open(targetUrl, '_blank', 'noopener,noreferrer');
+            return;
+          }
+
+          if (event.target.closest('#adminBtn') || event.target.closest('[data-open-admin]')) {
+            event.preventDefault();
+            openAdmin();
+            return;
+          }
+
+          if (event.target.closest('[data-retry-workspace]')) {
+            event.preventDefault();
+            retryWorkspaceLoad();
+            return;
+          }
+        });
+
+        document.querySelectorAll('a[href="#"]').forEach(function (link) {
+          link.addEventListener('click', function (event) { event.preventDefault(); });
+        });
+
+        var onScroll = function () {
+          header.classList.toggle('is-stuck', window.scrollY > 8);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
+
+      /* ----------------------------------------------------------------
+         Connection state (works inside a Google Sites iframe)
+      ---------------------------------------------------------------- */
+      function syncOfflineBanner() {
+        if (!offlineBanner) return;
+        var offline = !navigator.onLine;
+        offlineBanner.hidden = !offline;
+        if (offline) paintIcons();
+      }
+
+      function initConnectionState() {
+        syncOfflineBanner();
+        window.addEventListener('online', function () {
+          syncOfflineBanner();
+          if (apiMode && state.connectionError) {
+            showToast('Back online. Reconnecting…', 'refresh-cw');
+            retryWorkspaceLoad();
+          }
+        });
+        window.addEventListener('offline', function () {
+          syncOfflineBanner();
+          if (apiMode) showToast('You’re offline. Changes can’t be saved right now.', 'cloud-off');
+        });
+      }
+
+      /* ----------------------------------------------------------------
+         Boot
+      ---------------------------------------------------------------- */
+      function init() {
+        initTheme();
+        initClock();
+        applyCategories(DEFAULT_CATEGORY_LIST);
+        loadToken();
+        updateStats();
+
+        initControls();
+        initActions();
+        initConnectionState();
+        initUnlock();
+        initAdmin();
+        syncOfflineBanner();
+
+        if (!apiMode) {
+          // Brief, intentional skeleton state so the loading design is part of the experience.
+          window.setTimeout(loadWorkspace, 650);
+        } else {
+          loadWorkspace();
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
